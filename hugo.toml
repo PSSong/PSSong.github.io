@@ -1,0 +1,111 @@
+baseURL = "https://pssong.github.io/"
+title = "Global Pulse"
+languageCode = "ko"
+defaultContentLanguage = "ko"
+theme = "PaperMod"
+paginate = 10
+enableRobotsTXT = true
+buildDrafts = false
+buildFuture = false
+
+# Google Analytics (GA4) — 추후 측정 ID 입력
+# googleAnalytics = "G-XXXXXXXXXX"
+
+[params]
+  env = "production"
+  title = "Global Pulse"
+  description = "지정학, 경제, 기술 정책 — 뉴스 항간 분석"
+  keywords = ["geopolitics", "economy", "market", "policy", "Korea", "지정학", "경제", "시장"]
+  author = "Global Pulse"
+  defaultTheme = "auto"
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = false
+  ShowRssButtonInSectionTermList = true
+  UseHugoToc = true
+  disableSpecial1stPost = false
+  hidemeta = false
+  hideSummary = false
+  showtoc = true
+
+  [params.homeInfoParams]
+    Title = "Global Pulse"
+    Content = "지정학, 경제, 기술 정책의 흐름을 읽는 뉴스 분석 블로그"
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/PSSong"
+
+  [[params.socialIcons]]
+    name = "rss"
+    url = "index.xml"
+
+  # SEO / Open Graph
+  [params.cover]
+    linkFullImages = true
+
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+    minMatchCharLength = 0
+    keys = ["title", "permalink", "summary", "content"]
+
+# 메뉴
+[[menu.main]]
+  identifier = "geopolitics"
+  name = "Geopolitics"
+  url = "/categories/geopolitics/"
+  weight = 10
+
+[[menu.main]]
+  identifier = "economy"
+  name = "Economy"
+  url = "/categories/economy/"
+  weight = 20
+
+[[menu.main]]
+  identifier = "tech-policy"
+  name = "Tech & Policy"
+  url = "/categories/tech-policy/"
+  weight = 30
+
+[[menu.main]]
+  identifier = "market-signals"
+  name = "Market Signals"
+  url = "/categories/market-signals/"
+  weight = 40
+
+[[menu.main]]
+  identifier = "weekly-digest"
+  name = "Weekly Digest"
+  url = "/categories/weekly-digest/"
+  weight = 50
+
+[[menu.main]]
+  identifier = "search"
+  name = "Search"
+  url = "/search/"
+  weight = 90
+
+[[menu.main]]
+  identifier = "archives"
+  name = "Archives"
+  url = "/archives/"
+  weight = 91
+
+# 출력 포맷 (검색용 JSON 포함)
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+# 마크업 설정
+[markup]
+  [markup.highlight]
+    noClasses = false
+  [markup.goldmark.renderer]
+    unsafe = true
