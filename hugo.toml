@@ -6,7 +6,7 @@ theme = "PaperMod"
 paginate = 10
 enableRobotsTXT = true
 buildDrafts = false
-buildFuture = false
+buildFuture = true
 
 # Google Analytics (GA4) — 추후 측정 ID 입력
 # googleAnalytics = "G-XXXXXXXXXX"
