@@ -1,7 +1,7 @@
 baseURL = "https://pssong.github.io/"
 title = "Global Pulse"
-languageCode = "ko"
-defaultContentLanguage = "ko"
+languageCode = "en"
+defaultContentLanguage = "en"
 theme = "PaperMod"
 paginate = 10
 enableRobotsTXT = true
@@ -14,8 +14,8 @@ buildFuture = true
 [params]
   env = "production"
   title = "Global Pulse"
-  description = "지정학, 경제, 기술 정책 — 뉴스 항간 분석"
-  keywords = ["geopolitics", "economy", "market", "policy", "Korea", "지정학", "경제", "시장"]
+  description = "Reading between the lines — geopolitics, economy, tech policy"
+  keywords = ["geopolitics", "economy", "market", "policy", "analysis", "between-the-lines"]
   author = "Global Pulse"
   defaultTheme = "auto"
   ShowReadingTime = true
@@ -33,7 +33,7 @@ buildFuture = true
 
   [params.homeInfoParams]
     Title = "Global Pulse"
-    Content = "지정학, 경제, 기술 정책의 흐름을 읽는 뉴스 분석 블로그"
+    Content = "Reading between the lines of geopolitics, economy, and tech policy"
 
   [[params.socialIcons]]
     name = "github"
