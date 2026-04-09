@@ -305,3 +305,223 @@ body.dark {
     border-radius: 6px;
   }
 }
+
+/* ==========================================================================
+   WorldLens — 3D 지구 시각화 페이지
+   ========================================================================== */
+
+/* ── 전체 페이지 컨테이너 ── */
+#worldlens-page {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 60px);
+  background: #080810;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── 캔버스 ── */
+#worldlens-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  cursor: grab;
+}
+#worldlens-canvas:active { cursor: grabbing; }
+
+/* ── 상단 컨트롤 패널 ── */
+#wl-controls {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: rgba(8, 8, 20, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 10px 16px;
+  max-width: calc(100vw - 32px);
+}
+
+.wl-controls-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.wl-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.wl-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* 분류 필터 체크박스 */
+.wl-check {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.wl-check input[type="checkbox"] {
+  accent-color: #4B92DB;
+  width: 13px;
+  height: 13px;
+}
+
+/* 국가 검색 입력 */
+#wl-country-input {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 5px;
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  width: 110px;
+  outline: none;
+}
+#wl-country-input:focus { border-color: #4B92DB; }
+#wl-country-input::placeholder { color: rgba(255,255,255,0.35); }
+
+/* 국가 선택 칩 */
+#wl-country-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+
+.wl-chip {
+  font-size: 11px;
+  padding: 2px 7px;
+  border: 1.5px solid #00FF88;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #00FF88;
+  background: rgba(0,255,136,0.08);
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.wl-chip:hover { opacity: 0.7; }
+
+/* 범례 */
+.wl-legend { gap: 10px; }
+.wl-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  white-space: nowrap;
+}
+.wl-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── 하단 통계 패널 ── */
+#wl-stats {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 20px;
+  background: rgba(8, 8, 20, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 7px 18px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+  white-space: nowrap;
+}
+
+.wl-stat { display: flex; gap: 5px; }
+.wl-stat-time { color: rgba(255,255,255,0.45); font-size: 11px; }
+
+/* ── 호버 툴팁 ── */
+#wl-tooltip {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  background: rgba(10, 10, 28, 0.93);
+  border: 1px solid rgba(75,146,219,0.5);
+  border-radius: 7px;
+  padding: 8px 11px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #e8eeff;
+  pointer-events: none;
+  max-width: 220px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+#wl-tooltip b { color: #ffffff; font-size: 13px; display: block; margin-bottom: 2px; }
+#wl-tooltip em { color: #88ccff; font-style: normal; }
+
+/* ── 면책 주석 ── */
+#wl-disclaimer {
+  padding: 8px 20px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  background: #080810;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ── 다크모드 / 라이트모드 공통 오버라이드 ── */
+.dark #worldlens-page,
+#worldlens-page {
+  background: #080810;
+}
+
+/* ── 모바일 반응형 (768px 이하) ── */
+@media (max-width: 768px) {
+  #worldlens-page {
+    height: calc(100vh - 56px);
+  }
+
+  #wl-controls {
+    top: auto;
+    bottom: 56px;
+    left: 0;
+    right: 0;
+    transform: none;
+    border-radius: 10px 10px 0 0;
+    max-width: 100%;
+    padding: 10px 14px;
+  }
+
+  .wl-controls-inner {
+    gap: 10px;
+  }
+
+  #wl-stats {
+    bottom: auto;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 12px;
+    gap: 12px;
+    font-size: 11px;
+  }
+
+  #wl-country-input { width: 90px; }
+}

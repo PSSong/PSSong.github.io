@@ -1,0 +1,698 @@
+[
+  {
+    "name": "Shanghai",
+    "country": "CN",
+    "lat": 31.23,
+    "lon": 121.47,
+    "type": "mega",
+    "locode": "CNSHA"
+  },
+  {
+    "name": "Shenzhen (Yantian)",
+    "country": "CN",
+    "lat": 22.56,
+    "lon": 114.27,
+    "type": "mega",
+    "locode": "CNSZX"
+  },
+  {
+    "name": "Ningbo-Zhoushan",
+    "country": "CN",
+    "lat": 29.87,
+    "lon": 121.55,
+    "type": "mega",
+    "locode": "CNNGB"
+  },
+  {
+    "name": "Guangzhou Nansha",
+    "country": "CN",
+    "lat": 22.73,
+    "lon": 113.55,
+    "type": "major",
+    "locode": "CNGZH"
+  },
+  {
+    "name": "Qingdao",
+    "country": "CN",
+    "lat": 36.07,
+    "lon": 120.33,
+    "type": "major",
+    "locode": "CNTAO"
+  },
+  {
+    "name": "Tianjin",
+    "country": "CN",
+    "lat": 39.0,
+    "lon": 117.72,
+    "type": "major",
+    "locode": "CNTJN"
+  },
+  {
+    "name": "Xiamen",
+    "country": "CN",
+    "lat": 24.48,
+    "lon": 118.08,
+    "type": "major",
+    "locode": "CNXMN"
+  },
+  {
+    "name": "Dalian",
+    "country": "CN",
+    "lat": 38.92,
+    "lon": 121.62,
+    "type": "major",
+    "locode": "CNDLC"
+  },
+  {
+    "name": "Hong Kong",
+    "country": "HK",
+    "lat": 22.28,
+    "lon": 114.16,
+    "type": "mega",
+    "locode": "HKHKG"
+  },
+  {
+    "name": "Busan",
+    "country": "KR",
+    "lat": 35.1,
+    "lon": 129.04,
+    "type": "mega",
+    "locode": "KRPUS"
+  },
+  {
+    "name": "Incheon",
+    "country": "KR",
+    "lat": 37.45,
+    "lon": 126.63,
+    "type": "major",
+    "locode": "KRICN"
+  },
+  {
+    "name": "Tokyo",
+    "country": "JP",
+    "lat": 35.65,
+    "lon": 139.77,
+    "type": "major",
+    "locode": "JPTYO"
+  },
+  {
+    "name": "Yokohama",
+    "country": "JP",
+    "lat": 35.44,
+    "lon": 139.64,
+    "type": "major",
+    "locode": "JPYOK"
+  },
+  {
+    "name": "Osaka",
+    "country": "JP",
+    "lat": 34.66,
+    "lon": 135.46,
+    "type": "major",
+    "locode": "JPOSA"
+  },
+  {
+    "name": "Kobe",
+    "country": "JP",
+    "lat": 34.69,
+    "lon": 135.19,
+    "type": "major",
+    "locode": "JPUKB"
+  },
+  {
+    "name": "Kaohsiung",
+    "country": "TW",
+    "lat": 22.62,
+    "lon": 120.27,
+    "type": "major",
+    "locode": "TWKHH"
+  },
+  {
+    "name": "Keelung",
+    "country": "TW",
+    "lat": 25.13,
+    "lon": 121.73,
+    "type": "regional",
+    "locode": "TWKEL"
+  },
+  {
+    "name": "Singapore",
+    "country": "SG",
+    "lat": 1.27,
+    "lon": 103.82,
+    "type": "mega",
+    "locode": "SGSIN"
+  },
+  {
+    "name": "Port Klang",
+    "country": "MY",
+    "lat": 3.0,
+    "lon": 101.38,
+    "type": "major",
+    "locode": "MYPKG"
+  },
+  {
+    "name": "Tanjung Pelepas",
+    "country": "MY",
+    "lat": 1.36,
+    "lon": 103.55,
+    "type": "major",
+    "locode": "MYMYY"
+  },
+  {
+    "name": "Jakarta (Tanjung Priok)",
+    "country": "ID",
+    "lat": -6.1,
+    "lon": 106.88,
+    "type": "major",
+    "locode": "IDJKT"
+  },
+  {
+    "name": "Surabaya",
+    "country": "ID",
+    "lat": -7.21,
+    "lon": 112.73,
+    "type": "regional",
+    "locode": "IDSUB"
+  },
+  {
+    "name": "Ho Chi Minh City",
+    "country": "VN",
+    "lat": 10.78,
+    "lon": 106.7,
+    "type": "major",
+    "locode": "VNSGN"
+  },
+  {
+    "name": "Hai Phong",
+    "country": "VN",
+    "lat": 20.86,
+    "lon": 106.68,
+    "type": "regional",
+    "locode": "VNHPH"
+  },
+  {
+    "name": "Bangkok (Laem Chabang)",
+    "country": "TH",
+    "lat": 13.08,
+    "lon": 100.88,
+    "type": "major",
+    "locode": "THLCH"
+  },
+  {
+    "name": "Manila",
+    "country": "PH",
+    "lat": 14.6,
+    "lon": 120.97,
+    "type": "major",
+    "locode": "PHMNL"
+  },
+  {
+    "name": "Yangon",
+    "country": "MM",
+    "lat": 16.78,
+    "lon": 96.16,
+    "type": "regional",
+    "locode": "MMRGN"
+  },
+  {
+    "name": "Mumbai (JNPT)",
+    "country": "IN",
+    "lat": 18.95,
+    "lon": 72.95,
+    "type": "major",
+    "locode": "INNSA"
+  },
+  {
+    "name": "Mundra",
+    "country": "IN",
+    "lat": 22.84,
+    "lon": 69.71,
+    "type": "major",
+    "locode": "INMUN"
+  },
+  {
+    "name": "Chennai",
+    "country": "IN",
+    "lat": 13.08,
+    "lon": 80.29,
+    "type": "major",
+    "locode": "INMAA"
+  },
+  {
+    "name": "Colombo",
+    "country": "LK",
+    "lat": 6.95,
+    "lon": 79.85,
+    "type": "major",
+    "locode": "LKCMB"
+  },
+  {
+    "name": "Chittagong",
+    "country": "BD",
+    "lat": 22.33,
+    "lon": 91.82,
+    "type": "major",
+    "locode": "BDCGP"
+  },
+  {
+    "name": "Karachi",
+    "country": "PK",
+    "lat": 24.84,
+    "lon": 66.99,
+    "type": "major",
+    "locode": "PKKAR"
+  },
+  {
+    "name": "Jebel Ali (Dubai)",
+    "country": "AE",
+    "lat": 24.99,
+    "lon": 55.07,
+    "type": "mega",
+    "locode": "AEJEA"
+  },
+  {
+    "name": "Khalifa (Abu Dhabi)",
+    "country": "AE",
+    "lat": 24.8,
+    "lon": 54.63,
+    "type": "major",
+    "locode": "AEKHL"
+  },
+  {
+    "name": "Bandar Abbas",
+    "country": "IR",
+    "lat": 27.18,
+    "lon": 56.27,
+    "type": "major",
+    "locode": "IRBND"
+  },
+  {
+    "name": "Ras Laffan",
+    "country": "QA",
+    "lat": 25.93,
+    "lon": 51.55,
+    "type": "major",
+    "locode": "QARAS"
+  },
+  {
+    "name": "Dammam (King Abdulaziz)",
+    "country": "SA",
+    "lat": 26.43,
+    "lon": 50.17,
+    "type": "major",
+    "locode": "SADMM"
+  },
+  {
+    "name": "Aden",
+    "country": "YE",
+    "lat": 12.78,
+    "lon": 45.03,
+    "type": "regional",
+    "locode": "YEADE"
+  },
+  {
+    "name": "Salalah",
+    "country": "OM",
+    "lat": 16.94,
+    "lon": 54.0,
+    "type": "major",
+    "locode": "OMSAL"
+  },
+  {
+    "name": "Port Said",
+    "country": "EG",
+    "lat": 31.26,
+    "lon": 32.31,
+    "type": "major",
+    "locode": "EGPSD"
+  },
+  {
+    "name": "Alexandria",
+    "country": "EG",
+    "lat": 31.19,
+    "lon": 29.89,
+    "type": "major",
+    "locode": "EGALX"
+  },
+  {
+    "name": "Haifa",
+    "country": "IL",
+    "lat": 32.82,
+    "lon": 34.99,
+    "type": "regional",
+    "locode": "ILHFA"
+  },
+  {
+    "name": "Beirut",
+    "country": "LB",
+    "lat": 33.89,
+    "lon": 35.51,
+    "type": "regional",
+    "locode": "LBBEY"
+  },
+  {
+    "name": "Piraeus",
+    "country": "GR",
+    "lat": 37.94,
+    "lon": 23.65,
+    "type": "major",
+    "locode": "GRPIR"
+  },
+  {
+    "name": "Istanbul",
+    "country": "TR",
+    "lat": 40.98,
+    "lon": 29.03,
+    "type": "major",
+    "locode": "TRIST"
+  },
+  {
+    "name": "Mersin",
+    "country": "TR",
+    "lat": 36.78,
+    "lon": 34.64,
+    "type": "regional",
+    "locode": "TRMER"
+  },
+  {
+    "name": "Rotterdam",
+    "country": "NL",
+    "lat": 51.92,
+    "lon": 4.48,
+    "type": "mega",
+    "locode": "NLRTM"
+  },
+  {
+    "name": "Antwerp",
+    "country": "BE",
+    "lat": 51.22,
+    "lon": 4.4,
+    "type": "mega",
+    "locode": "BEANR"
+  },
+  {
+    "name": "Hamburg",
+    "country": "DE",
+    "lat": 53.54,
+    "lon": 9.99,
+    "type": "major",
+    "locode": "DEHAM"
+  },
+  {
+    "name": "Bremerhaven",
+    "country": "DE",
+    "lat": 53.55,
+    "lon": 8.58,
+    "type": "major",
+    "locode": "DEBRV"
+  },
+  {
+    "name": "Felixstowe",
+    "country": "GB",
+    "lat": 51.96,
+    "lon": 1.35,
+    "type": "major",
+    "locode": "GBFXT"
+  },
+  {
+    "name": "London Gateway",
+    "country": "GB",
+    "lat": 51.5,
+    "lon": 0.5,
+    "type": "major",
+    "locode": "GBLON"
+  },
+  {
+    "name": "Le Havre",
+    "country": "FR",
+    "lat": 49.49,
+    "lon": 0.11,
+    "type": "major",
+    "locode": "FRLEH"
+  },
+  {
+    "name": "Barcelona",
+    "country": "ES",
+    "lat": 41.35,
+    "lon": 2.18,
+    "type": "major",
+    "locode": "ESBCN"
+  },
+  {
+    "name": "Valencia",
+    "country": "ES",
+    "lat": 39.46,
+    "lon": -0.33,
+    "type": "major",
+    "locode": "ESVLC"
+  },
+  {
+    "name": "Genoa",
+    "country": "IT",
+    "lat": 44.41,
+    "lon": 8.93,
+    "type": "major",
+    "locode": "ITGOA"
+  },
+  {
+    "name": "Gioia Tauro",
+    "country": "IT",
+    "lat": 38.43,
+    "lon": 15.9,
+    "type": "major",
+    "locode": "ITGIT"
+  },
+  {
+    "name": "Gdansk",
+    "country": "PL",
+    "lat": 54.4,
+    "lon": 18.65,
+    "type": "regional",
+    "locode": "PLGDN"
+  },
+  {
+    "name": "Durban",
+    "country": "ZA",
+    "lat": -29.87,
+    "lon": 31.03,
+    "type": "major",
+    "locode": "ZADUR"
+  },
+  {
+    "name": "Cape Town",
+    "country": "ZA",
+    "lat": -33.9,
+    "lon": 18.43,
+    "type": "regional",
+    "locode": "ZACPT"
+  },
+  {
+    "name": "Lagos (Apapa)",
+    "country": "NG",
+    "lat": 6.45,
+    "lon": 3.39,
+    "type": "major",
+    "locode": "NGAPP"
+  },
+  {
+    "name": "Mombasa",
+    "country": "KE",
+    "lat": -4.05,
+    "lon": 39.67,
+    "type": "major",
+    "locode": "KEMBA"
+  },
+  {
+    "name": "Djibouti",
+    "country": "DJ",
+    "lat": 11.6,
+    "lon": 43.14,
+    "type": "major",
+    "locode": "DJJIB"
+  },
+  {
+    "name": "Dar es Salaam",
+    "country": "TZ",
+    "lat": -6.82,
+    "lon": 39.29,
+    "type": "regional",
+    "locode": "TZDAR"
+  },
+  {
+    "name": "Los Angeles",
+    "country": "US",
+    "lat": 33.73,
+    "lon": -118.26,
+    "type": "mega",
+    "locode": "USLAX"
+  },
+  {
+    "name": "Long Beach",
+    "country": "US",
+    "lat": 33.75,
+    "lon": -118.22,
+    "type": "mega",
+    "locode": "USLGB"
+  },
+  {
+    "name": "New York/New Jersey",
+    "country": "US",
+    "lat": 40.65,
+    "lon": -74.07,
+    "type": "mega",
+    "locode": "USNYC"
+  },
+  {
+    "name": "Savannah",
+    "country": "US",
+    "lat": 32.08,
+    "lon": -81.09,
+    "type": "major",
+    "locode": "USSAV"
+  },
+  {
+    "name": "Seattle/Tacoma",
+    "country": "US",
+    "lat": 47.52,
+    "lon": -122.38,
+    "type": "major",
+    "locode": "USSEA"
+  },
+  {
+    "name": "Houston",
+    "country": "US",
+    "lat": 29.73,
+    "lon": -95.28,
+    "type": "major",
+    "locode": "USHOU"
+  },
+  {
+    "name": "Vancouver",
+    "country": "CA",
+    "lat": 49.29,
+    "lon": -123.11,
+    "type": "major",
+    "locode": "CAVAN"
+  },
+  {
+    "name": "Prince Rupert",
+    "country": "CA",
+    "lat": 54.31,
+    "lon": -130.32,
+    "type": "regional",
+    "locode": "CAPTR"
+  },
+  {
+    "name": "Santos",
+    "country": "BR",
+    "lat": -23.94,
+    "lon": -46.32,
+    "type": "major",
+    "locode": "BRSSZ"
+  },
+  {
+    "name": "Colon (Panama)",
+    "country": "PA",
+    "lat": 9.35,
+    "lon": -79.9,
+    "type": "major",
+    "locode": "PACLP"
+  },
+  {
+    "name": "Manzanillo",
+    "country": "MX",
+    "lat": 19.05,
+    "lon": -104.32,
+    "type": "regional",
+    "locode": "MXZLO"
+  },
+  {
+    "name": "Melbourne",
+    "country": "AU",
+    "lat": -37.81,
+    "lon": 144.96,
+    "type": "major",
+    "locode": "AUMEL"
+  },
+  {
+    "name": "Sydney",
+    "country": "AU",
+    "lat": -33.85,
+    "lon": 151.2,
+    "type": "major",
+    "locode": "AUSYD"
+  },
+  {
+    "name": "Brisbane",
+    "country": "AU",
+    "lat": -27.47,
+    "lon": 153.02,
+    "type": "regional",
+    "locode": "AUBNE"
+  },
+  {
+    "name": "Fremantle",
+    "country": "AU",
+    "lat": -32.05,
+    "lon": 115.74,
+    "type": "regional",
+    "locode": "AUFRE"
+  },
+  {
+    "name": "Vladivostok",
+    "country": "RU",
+    "lat": 43.12,
+    "lon": 131.88,
+    "type": "major",
+    "locode": "RUVVO"
+  },
+  {
+    "name": "Novorossiysk",
+    "country": "RU",
+    "lat": 44.72,
+    "lon": 37.78,
+    "type": "major",
+    "locode": "RUNVS"
+  },
+  {
+    "name": "St. Petersburg",
+    "country": "RU",
+    "lat": 59.93,
+    "lon": 30.32,
+    "type": "major",
+    "locode": "RULED"
+  },
+  {
+    "name": "Hambantota",
+    "country": "LK",
+    "lat": 6.13,
+    "lon": 81.12,
+    "type": "regional",
+    "locode": "LKHMB"
+  },
+  {
+    "name": "Gwadar",
+    "country": "PK",
+    "lat": 25.13,
+    "lon": 62.33,
+    "type": "regional",
+    "locode": "PKGWD"
+  },
+  {
+    "name": "Kyaukpyu",
+    "country": "MM",
+    "lat": 19.43,
+    "lon": 93.55,
+    "type": "regional",
+    "locode": "MMKYP"
+  },
+  {
+    "name": "Mombasa",
+    "country": "KE",
+    "lat": -4.05,
+    "lon": 39.67,
+    "type": "major",
+    "locode": "KEMBA2"
+  }
+]

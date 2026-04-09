@@ -58,6 +58,12 @@ buildFuture = true
 
 # 메뉴
 [[menu.main]]
+  identifier = "cat-worldlens"
+  name = "WorldLens"
+  url = "/worldlens/"
+  weight = 5
+
+[[menu.main]]
   identifier = "cat-geopolitics"
   name = "Geopolitics"
   url = "/categories/geopolitics/"
