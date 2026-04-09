@@ -1,9 +1,9 @@
 ---
-title: "이란-미국 긴장 고조와 유가 상승: 에너지 가격 무기화"
+title: "Escalating Iran-US Tensions and Rising Oil Prices: The Weaponization of Energy Prices"
 date: 2026-04-09T22:30:00+09:00
 categories: ["Geopolitics"]
 tags: ["Iran", "US", "oil-prices", "geopolitical-tension", "energy-security"]
-summary: "이란과 미국 간의 긴장이 유가를 $100 이상으로 끌어올려, 단순한 충돌을 넘어 인플레이션 압력 유지와 실물 자산 가치 극대화 전략으로 해석된다."
+summary: "Tensions between Iran and the United States have pushed oil prices above $100, which is interpreted as a strategy to maintain inflationary pressure and maximize the value of real assets, going beyond a simple conflict."
 draft: false
 ShowToc: false
 narrative_chain: "iran-us-tensions-2026"
@@ -11,10 +11,10 @@ direction: "escalation"
 sovereign_actor: "Iran, US"
 ---
 
-최근 이란과 미국 간의 긴장이 고조되면서 국제 유가가 $100을 넘어섰다. 이는 두 나라 사이의 군사적 충돌 가능성과 관련된 불확실성이 에너지 시장에 직접적인 영향을 미치고 있음을 보여준다. 그러나 이 상황은 단순히 경제적 불안정을 초래하는 것 이상의 의미를 지닌다. 
+As tensions between Iran and the United States have recently escalated, international oil prices have surpassed $100. This demonstrates that the uncertainty surrounding the possibility of military conflict between the two nations is directly impacting the energy market. However, this situation carries significance beyond merely causing economic instability. 
 
-**행간 읽기**: 이 긴장 고조는 에너지 가격을 무기화하는 전략적 움직임으로 해석될 수 있다. 이란과 미국 양측 모두 에너지 시장의 변동성을 통해 상대방에게 압박을 가하고, 동시에 자국 내 실물 자산의 가치를 극대화하려는 의도가 엿보인다. 특히, 인플레이션 압력을 지속시키는 것은 경제적 안정성을 저해하고, 이는 결국 통화 정책과 재정 정책에 대한 통제력을 강화하는 데 기여할 수 있다.
+**Reading Between the Lines**: This escalation of tension can be interpreted as a strategic move to weaponize energy prices. Both Iran and the United States appear to have intentions to exert pressure on each other through energy market volatility while simultaneously maximizing the value of real assets within their respective countries. In particular, sustaining inflationary pressure undermines economic stability, which can ultimately contribute to strengthening control over monetary and fiscal policies.
 
-이런 맥락에서, 유가 상승은 단순히 지정학적 불안정의 결과가 아니라, 각국 정부와 기업들이 경제적 이익을 극대화하려는 복잡한 전략의 일환으로 볼 수 있다. 이는 에너지 시장의 불안정성이 장기화될 가능성을 시사하며, 글로벌 경제에 지속적인 영향을 미칠 것으로 예상된다.
+In this context, the rise in oil prices can be seen not merely as a result of geopolitical instability, but as part of a complex strategy by governments and corporations to maximize economic interests. This suggests the possibility that energy market instability may be prolonged, and it is expected to have a continuous impact on the global economy.
 
 ---

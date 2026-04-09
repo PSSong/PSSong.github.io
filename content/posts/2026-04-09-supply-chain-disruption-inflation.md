@@ -1,9 +1,9 @@
 ---
-title: "공급망 교란과 인플레이션 상승: 식량 및 에너지 가격 압박"
+title: "Supply Chain Disruptions and Rising Inflation: Pressures on Food and Energy Prices"
 date: 2026-04-09T22:30:00+09:00
 categories: ["Economy"]
 tags: ["supply-chain", "inflation", "food-prices", "energy-prices"]
-summary: "엘니뇨와 지정학적 긴장으로 인한 공급망 교란이 인플레이션 압력을 강화하고 화폐 가치를 하락시킨다."
+summary: "Supply chain disruptions caused by El Niño and geopolitical tensions are intensifying inflationary pressures and devaluing currencies."
 draft: false
 ShowToc: false
 narrative_chain: "supply-chain-inflation-2026"
@@ -11,10 +11,8 @@ direction: "escalation"
 sovereign_actor: "Global Market Forces"
 ---
 
-엘니뇨 현상과 지정학적 긴장으로 인한 공급망 교란이 식량과 에너지 가격을 상승시키며, 이로 인해 인플레이션 압력이 더욱 강화되고 있다. 이러한 요인들은 경제 전반에 걸쳐 물가 상승을 가속화하고 있다.
+Supply chain disruptions caused by the El Niño phenomenon and geopolitical tensions are driving up food and energy prices, further intensifying inflationary pressures. These factors are accelerating price increases across the entire economy.
 
-**행간 읽기**: 공급망 교란이 단순히 물리적인 물류 문제를 넘어, 경제적 불안정을 증폭시키는 요인으로 작용하고 있다. 엘니뇨의 영향으로 인한 농업 생산 감소와 지정학적 긴장으로 인한 자원 공급 차질은 식량과 에너지 가격을 동시에 압박하고 있다. 이러한 상황은 인플레이션을 고착화시키고, 화폐 가치의 하락을 가속화하여 소비자와 기업 모두에게 부담을 가중시킨다.
+**Reading Between the Lines**: Supply chain disruptions are acting as a factor that amplifies economic instability, going beyond simple physical logistics issues. Reduced agricultural production due to the effects of El Niño and disruptions in resource supply caused by geopolitical tensions are simultaneously putting pressure on food and energy prices. This situation is entrenching inflation and accelerating the decline in currency value, increasing the burden on both consumers and businesses.
 
-결국, 이러한 공급망의 불안정성은 단기적인 가격 상승을 넘어 장기적인 경제 안정성에 대한 우려를 증폭시키고 있다. 정부와 기업들은 이러한 복합적인 압박 요인에 대응하기 위한 다각적인 전략을 모색해야 할 필요성이 높아지고 있다.
-
----
+Ultimately, this instability in the supply chain is amplifying concerns about long-term economic stability, moving beyond short-term price increases. There is a growing need for governments and businesses to seek multifaceted strategies to respond to these complex pressure factors.

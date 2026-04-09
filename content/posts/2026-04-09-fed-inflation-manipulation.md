@@ -1,9 +1,9 @@
 ---
-title: "연준의 인플레이션 은폐 전략: 지정학적 리스크 활용"
+title: "The Fed's Inflation Concealment Strategy: Leveraging Geopolitical Risks"
 date: 2026-04-09T22:30:00+09:00
 categories: ["Economy"]
 tags: ["Fed", "inflation", "PCE", "geopolitical-risk"]
-summary: "연준은 지정학적 리스크를 통해 인플레이션 고착화를 은폐하고, 통화 정책 실패를 전쟁으로 인한 불가항력적 상황으로 포장하려 한다."
+summary: "The Fed is attempting to conceal the entrenchment of inflation through geopolitical risks and frame monetary policy failures as unavoidable circumstances caused by war."
 draft: false
 ShowToc: false
 narrative_chain: "fed-inflation-2026"
@@ -11,10 +11,8 @@ direction: "hawkish"
 sovereign_actor: "US-Fed"
 ---
 
-지정학적 긴장이 고조되는 가운데, 연준의 인플레이션 관리 전략에 대한 새로운 해석이 제기되고 있다. 최근의 인플레이션 지표가 여전히 높은 수준을 유지하고 있음에도 불구하고, 연준은 통화 정책의 실패를 전쟁과 같은 외부 요인으로 돌리려는 경향이 보인다.
+As geopolitical tensions escalate, new interpretations of the Fed's inflation management strategy are emerging. Despite recent inflation indicators remaining at high levels, the Fed shows a tendency to attribute monetary policy failures to external factors such as war.
 
-**행간 읽기**: 연준의 이러한 접근은 인플레이션의 구조적 고착화를 은폐하는 데 일조하고 있다. 지정학적 리스크를 강조함으로써, 연준은 통화 정책의 효과성에 대한 비판을 완화하고, 경제적 불안정을 외부 요인에 귀인하려는 전략을 펼치고 있다. 이는 결국 통화 정책의 실패를 '불가항력적 상황'으로 포장하여, 정책 결정자들의 책임을 분산시키는 효과를 가져올 수 있다.
+**Reading Between the Lines**: This approach by the Fed is contributing to the concealment of the structural entrenchment of inflation. By emphasizing geopolitical risks, the Fed is employing a strategy to mitigate criticism regarding the effectiveness of monetary policy and to attribute economic instability to external factors. Ultimately, this can have the effect of dispersing the responsibility of policymakers by packaging monetary policy failures as "unavoidable circumstances."
 
-이러한 맥락에서, 지정학적 긴장이 통화 정책의 실패를 가리는 '망원경' 역할을 하고 있다는 관측이 나온다. 연준이 이러한 전략을 통해 인플레이션 압력을 장기화시키고, 경제적 안정성을 유지하는 데 필요한 조치를 지연시키는 경향이 있을 수 있다.
-
----
+In this context, observations suggest that geopolitical tensions are acting as a "telescope" that obscures the failures of monetary policy. Through this strategy, the Fed may be tending to prolong inflationary pressures and delay the measures necessary to maintain economic stability.
