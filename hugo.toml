@@ -58,31 +58,31 @@ buildFuture = true
 
 # 메뉴
 [[menu.main]]
-  identifier = "geopolitics"
+  identifier = "menu-geopolitics"
   name = "Geopolitics"
   url = "/categories/geopolitics/"
   weight = 10
 
 [[menu.main]]
-  identifier = "economy"
+  identifier = "menu-economy"
   name = "Economy"
   url = "/categories/economy/"
   weight = 20
 
 [[menu.main]]
-  identifier = "tech-policy"
+  identifier = "menu-tech-policy"
   name = "Tech & Policy"
   url = "/categories/tech-policy/"
   weight = 30
 
 [[menu.main]]
-  identifier = "market-signals"
+  identifier = "menu-market-signals"
   name = "Market Signals"
   url = "/categories/market-signals/"
   weight = 40
 
 [[menu.main]]
-  identifier = "weekly-digest"
+  identifier = "menu-weekly-digest"
   name = "Weekly Digest"
   url = "/categories/weekly-digest/"
   weight = 50
