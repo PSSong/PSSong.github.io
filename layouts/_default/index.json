@@ -1,0 +1,20 @@
+{{- $index := slice -}}
+{{- range .Site.RegularPages -}}
+  {{- $entry := dict
+    "title"           .Title
+    "permalink"       .Permalink
+    "summary"         .Summary
+    "content"         .Plain
+    "tags"            (.Params.tags | default slice)
+    "date"            (.Date.Format "2006-01-02T15:04:05Z07:00")
+    "narrative_chain" (.Params.narrative_chain | default "")
+    "direction"       (.Params.direction | default "")
+    "sovereign_actor" (.Params.sovereign_actor | default "")
+    "narrative_shift" (.Params.narrative_shift | default false)
+    "shift_type"      (.Params.shift_type | default "")
+    "shift_from"      (.Params.shift_from | default "")
+    "shift_to"        (.Params.shift_to | default "")
+  -}}
+  {{- $index = $index | append $entry -}}
+{{- end -}}
+{{- $index | jsonify -}}

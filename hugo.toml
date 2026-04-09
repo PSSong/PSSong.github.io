@@ -94,6 +94,12 @@ buildFuture = true
   weight = 50
 
 [[menu.main]]
+  identifier = "explore"
+  name = "Explore"
+  url = "/explore/"
+  weight = 85
+
+[[menu.main]]
   identifier = "search"
   name = "Search"
   url = "/search/"
