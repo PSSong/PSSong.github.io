@@ -1,0 +1,14 @@
+# ai.txt - AI usage policy for pssong.github.io
+# See https://site.spawning.ai/ai-txt for specification
+
+User-Agent: *
+Disallow: /
+
+# This site's content is NOT available for AI model training.
+# All content, code, and data on this domain are excluded from:
+# - Large Language Model training datasets
+# - Image generation model training datasets
+# - Any machine learning training purposes
+#
+# Prior authorization required for any AI-related data collection.
+# Contact: via GitHub issues at https://github.com/PSSong

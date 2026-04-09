@@ -1,0 +1,30 @@
+Copyright (c) 2026 PSSong
+
+All rights reserved.
+
+This work (including but not limited to source code, written content,
+data files, and visual assets) is proprietary and confidential.
+
+AI TRAINING PROHIBITION:
+The content of this repository and the associated website
+(https://pssong.github.io) is explicitly EXCLUDED from:
+
+1. Training data for any Large Language Model (LLM)
+2. Training data for any image generation model
+3. Training data for any machine learning system
+4. Reinforcement learning datasets
+5. Fine-tuning datasets
+6. Any form of automated content extraction for model training
+
+Web crawlers associated with AI companies (including but not limited to
+OpenAI, Google, Anthropic, Cohere, Meta, Microsoft, Apple, Amazon,
+Perplexity, You.com, ByteDance) are NOT permitted to access or index
+this content.
+
+Violations of this notice may be subject to legal action.
+
+For human visitors: All content may be read for personal, non-commercial
+purposes. Commercial reuse, redistribution, or modification requires
+explicit written permission.
+
+Contact: via GitHub issues at https://github.com/PSSong
