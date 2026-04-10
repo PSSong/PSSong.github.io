@@ -193,34 +193,34 @@ function _tooltipHtml(type, item) {
   switch (type) {
     case 'aircraft':
       return `<b>${item.callsign || 'N/A'}</b>
-        <div>국가: <em>${item.country || '-'}</em></div>
-        <div>분류: <em>${item.classification || '-'}</em></div>
-        <div>고도: ${item.alt != null ? Math.round(item.alt) + ' m' : '-'}</div>
-        <div>출발국: ${item.origin_country || '-'}</div>`;
+        <div>Country: <em>${item.country || '-'}</em></div>
+        <div>Class: <em>${item.classification || '-'}</em></div>
+        <div>Altitude: ${item.alt != null ? Math.round(item.alt) + ' m' : '-'}</div>
+        <div>Origin: ${item.origin_country || '-'}</div>`;
     case 'vessel':
       return `<b>${item.ship_name || 'N/A'}</b>
-        <div>국가: <em>${item.country || '-'}</em></div>
-        <div>분류: <em>${item.classification || '-'}</em></div>
-        <div>선종: ${item.ship_type ?? '-'}</div>
-        <div>속도: ${item.speed != null ? item.speed + ' kn' : '-'}</div>`;
+        <div>Country: <em>${item.country || '-'}</em></div>
+        <div>Class: <em>${item.classification || '-'}</em></div>
+        <div>Type: ${item.ship_type ?? '-'}</div>
+        <div>Speed: ${item.speed != null ? item.speed + ' kn' : '-'}</div>`;
     case 'satellite':
       return `<b>${item.name || 'N/A'}</b>
         <div>NORAD: ${item.norad_id || '-'}</div>
-        <div>운영국: <em>${item.country || '-'}</em></div>
-        <div>분류: <em>${item.classification || '-'}</em></div>`;
+        <div>Operator: <em>${item.country || '-'}</em></div>
+        <div>Class: <em>${item.classification || '-'}</em></div>`;
     case 'port':
       return `<b>${item.name || 'N/A'}</b>
-        <div>국가: <em>${item.country || '-'}</em></div>
-        <div>등급: ${item.type || '-'}</div>
-        <div>코드: ${item.locode || '-'}</div>`;
+        <div>Country: <em>${item.country || '-'}</em></div>
+        <div>Grade: ${item.type || '-'}</div>
+        <div>LOCODE: ${item.locode || '-'}</div>`;
     case 'typhoon': {
       const windKt  = item.wind_speed_kt ?? item.max_wind_kt;
       const movDir  = _typhoonDir(item);
-      return `<b>${item.name || '태풍'}</b>
-        <div>카테고리: <em>${item.category ?? '-'}</em></div>
-        <div>최대 풍속: ${windKt != null ? windKt + ' kt' : '-'}</div>
-        <div>이동 방향: ${movDir}</div>
-        <div>위치: ${item.lat?.toFixed(1)}°, ${item.lon?.toFixed(1)}°</div>`;
+      return `<b>${item.name || 'Typhoon'}</b>
+        <div>Category: <em>${item.category ?? '-'}</em></div>
+        <div>Max Wind: ${windKt != null ? windKt + ' kt' : '-'}</div>
+        <div>Direction: ${movDir}</div>
+        <div>Position: ${item.lat?.toFixed(1)}°, ${item.lon?.toFixed(1)}°</div>`;
     }
     default: return '';
   }

@@ -180,7 +180,7 @@
 
   <header id="wl-header">
     <a href="{{ .Site.BaseURL }}" class="wl-site-name">{{ .Site.Title }}</a>
-    <a href="{{ .Site.BaseURL }}" class="wl-back">← 홈으로</a>
+    <a href="{{ .Site.BaseURL }}" class="wl-back">← Home</a>
   </header>
 
   <div id="worldlens-page">
@@ -190,14 +190,14 @@
       <div class="wl-controls-inner">
 
         <div class="wl-section">
-          <span class="wl-label">분류</span>
+          <span class="wl-label">Filter</span>
           <label class="wl-check"><input type="checkbox" id="wl-filter-civilian" checked> Civilian</label>
           <label class="wl-check"><input type="checkbox" id="wl-filter-unknown"  checked> Unknown</label>
           <label class="wl-check"><input type="checkbox" id="wl-filter-military" checked> Military</label>
         </div>
 
         <div class="wl-section">
-          <span class="wl-label">레이어</span>
+          <span class="wl-label">Layers</span>
           <label class="wl-check"><input type="checkbox" id="wl-layer-aircraft"  checked> ✈</label>
           <label class="wl-check"><input type="checkbox" id="wl-layer-vessel"    checked> ⛵</label>
           <label class="wl-check"><input type="checkbox" id="wl-layer-satellite" checked> 🛰</label>
@@ -206,17 +206,17 @@
         </div>
 
         <div class="wl-section">
-          <span class="wl-label">국가</span>
+          <span class="wl-label">Country</span>
           <input type="text" id="wl-country-input" placeholder="KR, US …" autocomplete="off">
           <div id="wl-country-chips"></div>
         </div>
 
         <div class="wl-section wl-legend">
-          <span class="wl-legend-item"><span class="wl-dot" style="background:#00DDFF"></span>항공</span>
-          <span class="wl-legend-item"><span class="wl-dot" style="background:#FF8800"></span>선박</span>
-          <span class="wl-legend-item"><span class="wl-dot" style="background:#FFDD00"></span>위성</span>
-          <span class="wl-legend-item"><span class="wl-dot" style="background:#88BBFF"></span>태풍</span>
-          <span class="wl-legend-item"><span class="wl-sqr" style="background:#CCCCCC"></span>항구</span>
+          <span class="wl-legend-item"><span class="wl-dot" style="background:#00DDFF"></span>Aircraft</span>
+          <span class="wl-legend-item"><span class="wl-dot" style="background:#FF8800"></span>Vessel</span>
+          <span class="wl-legend-item"><span class="wl-dot" style="background:#FFDD00"></span>Satellite</span>
+          <span class="wl-legend-item"><span class="wl-dot" style="background:#88BBFF"></span>Typhoon</span>
+          <span class="wl-legend-item"><span class="wl-sqr" style="background:#CCCCCC"></span>Port</span>
         </div>
 
       </div>
@@ -241,13 +241,13 @@
 
     {{/* ── 3단계 줌 컨트롤 ── */}}
     <div id="wl-zoom-ctrl">
-      <button id="wl-zoom-in"  title="확대 (+)">+</button>
+      <button id="wl-zoom-in"  title="Zoom In (+)">+</button>
       <div id="wl-zoom-levels">
-        <button class="wl-zlvl active" data-level="1" title="글로벌">1</button>
-        <button class="wl-zlvl"        data-level="2" title="지역">2</button>
-        <button class="wl-zlvl"        data-level="3" title="근접">3</button>
+        <button class="wl-zlvl active" data-level="1" title="Global">1</button>
+        <button class="wl-zlvl"        data-level="2" title="Regional">2</button>
+        <button class="wl-zlvl"        data-level="3" title="Close-up">3</button>
       </div>
-      <button id="wl-zoom-out" title="축소 (-)">−</button>
+      <button id="wl-zoom-out" title="Zoom Out (-)">−</button>
     </div>
 
     {{/* ── 하단 통계 ── */}}
@@ -256,7 +256,7 @@
       <span class="wl-stat">⛵ <span id="wl-stat-vessels">--</span></span>
       <span class="wl-stat">🛰 <span id="wl-stat-satellites">--</span></span>
       <span class="wl-stat">🌀 <span id="wl-stat-typhoons">0</span></span>
-      <span class="wl-stat wl-stat-time">갱신: <span id="wl-stat-time">--</span></span>
+      <span class="wl-stat wl-stat-time">Updated: <span id="wl-stat-time">--</span></span>
     </div>
 
     <div id="wl-tooltip"></div>
@@ -264,7 +264,7 @@
   </div>
 
   <div id="wl-disclaimer">
-    ⚠ AIS/ADS-B 비활성 군용 기체·선박은 미포함 · 공개 소스 기반 · 5분 주기 갱신
+    ⚠ Inactive military AIS/ADS-B not included · Based on public sources · Refreshed every 5 min
   </div>
 
   {{/* ── CDN: D3 v7 + TopoJSON (Three.js 제거) ── */}}

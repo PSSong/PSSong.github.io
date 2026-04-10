@@ -21,7 +21,7 @@ async function init() {
     window.WL = wl;
   } catch (_) {
     const el = document.getElementById('wl-stats');
-    if (el) el.textContent = '초기화 실패 — 새로고침 시도';
+    if (el) el.textContent = 'Initialization failed — please refresh';
     return;
   }
 
@@ -31,7 +31,7 @@ async function init() {
   // ── TopoJSON 로드 + 베이스맵 생성 ─────────────────────────────────────────────
   let topoData = null;
   try   { topoData = await loadTopo(); }
-  catch (e) { console.warn('[WorldLens] TopoJSON 로드 실패'); }
+  catch (e) { console.warn('[WorldLens] TopoJSON load failed'); }
   createBasemap(document.getElementById('wl-basemap'), topoData, 1);
 
   // ── 레이어 매니저 초기화 ─────────────────────────────────────────────────────
@@ -59,9 +59,9 @@ async function init() {
     const [posData, portsData] = await Promise.all([loadPositions(), loadPorts()]);
     lm.updateData(_capData(posData), portsData);
   } catch (e) {
-    console.error('[WorldLens] 데이터 로드 실패:', e);
+    console.error('[WorldLens] Data load failed:', e);
     const el = document.getElementById('wl-stats');
-    if (el) el.textContent = '데이터 로드 실패 — 잠시 후 새로고침';
+    if (el) el.textContent = 'Data load failed — please try again later';
   }
 
   // ── 인터랙션 설정 ────────────────────────────────────────────────────────────
@@ -97,7 +97,7 @@ function _capData(posData) {
               + (posData.satellites?.length ?? 0);
   if (total <= _CAP_TOTAL) return posData;
 
-  console.warn(`[WorldLens] 데이터 ${total}개 > 상한 ${_CAP_TOTAL}개 — 레이어별 상한 적용`);
+  console.warn(`[WorldLens] ${total} items exceed cap ${_CAP_TOTAL} — per-layer caps applied`);
   return {
     ...posData,
     aircraft:   (posData.aircraft   || []).slice(0, _CAP.aircraft),
