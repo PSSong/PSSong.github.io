@@ -1,114 +1,192 @@
-// 의존 모듈: classify_colors.js
-// 피의존 모듈: main.js, layers.js, interaction.js
-// 변경 시 영향: GLOBE_RADIUS 변경 시 layers.js의 레이어 오프셋도 갱신 필요
+// Package globe: D3 북극중심 방위등거리 투영(AE), 베이스맵, flat-earth 스타일 격자
+// 의존: d3, topojson (global CDN), window.WL (WASM — project)
+// 피의존: main.js (createBasemap), layers.js (project), interaction.js (updateGraticule)
+// 변경 시 영향: MAP_CENTER/MAP_RADIUS는 worldlens-core Rust 상수와 동기화 필수
 
-import { COLORS } from './classify_colors.js';
+export const MAP_SIZE   = 1000;
+export const MAP_CENTER = 500;   // SVG 중심 = 북극
+export const MAP_RADIUS = 478;   // 투영 반지름 (SVG 내부 단위)
 
-export const GLOBE_RADIUS = 1.0;
+let _proj = null;
+let _path = null;
 
-/**
- * 위경도 → Three.js 3D 구면 좌표 (Y축이 북극)
- * @param {number} lat  위도 (-90 ~ 90)
- * @param {number} lon  경도 (-180 ~ 180)
- * @param {number} r    반경 (기본값 GLOBE_RADIUS + 미세 오프셋)
- */
-export function latLonToVec3(lat, lon, r = GLOBE_RADIUS + 0.003) {
-  const phi   = (90 - lat) * (Math.PI / 180);  // 북극 기준 천정각
-  const theta = (lon + 180) * (Math.PI / 180); // 경도 → 방위각
-  return new THREE.Vector3(
-    -r * Math.sin(phi) * Math.cos(theta),
-     r * Math.cos(phi),
-     r * Math.sin(phi) * Math.sin(theta)
-  );
+// ── 투영 초기화 ─────────────────────────────────────────────────────────────────
+
+export function createProjection() {
+  _proj = d3.geoAzimuthalEquidistant()
+    .rotate([0, -90])          // 북극을 중심으로
+    .scale(MAP_RADIUS)
+    .translate([MAP_CENTER, MAP_CENTER])
+    .clipAngle(180);           // 남극까지 전개 (UN 엠블럼과 동일)
+  _path = d3.geoPath().projection(_proj);
+  return { projection: _proj, path: _path };
 }
 
-/** UN 파란색 구체 */
-function _createSphere() {
-  const geo = new THREE.SphereGeometry(GLOBE_RADIUS, 72, 72);
-  const mat = new THREE.MeshPhongMaterial({
-    color:     COLORS.globe,
-    shininess: 20,
-    specular:  new THREE.Color(0x224466),
-  });
-  return new THREE.Mesh(geo, mat);
+/** lon/lat → SVG [x, y]. WASM worldlens-core 위임. 미초기화 시 null 반환 */
+export function project(lon, lat) {
+  if (!window.WL) return null;
+  const pt = window.WL.project(lon, lat);
+  return pt && pt.length === 2 ? [pt[0], pt[1]] : null;
 }
 
-/** 경위도 격자선 (경도 15°, 위도 30°) */
-function _createGrid() {
-  const group = new THREE.Group();
-  const mat   = new THREE.LineBasicMaterial({
-    color: COLORS.grid,
-    transparent: true,
-    opacity: 0.18,
-  });
-  const R = GLOBE_RADIUS + 0.001;
+export function getPath() { return _path; }
 
-  // 경도선 (meridians) — 15° 간격
-  for (let lon = -180; lon < 180; lon += 15) {
-    const pts = [];
-    for (let lat = -90; lat <= 90; lat += 3) pts.push(latLonToVec3(lat, lon, R));
-    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat));
+// ── 베이스맵 생성 ───────────────────────────────────────────────────────────────
+
+export function createBasemap(containerEl, topoData, zoomLevel = 1) {
+  const g = d3.select(containerEl);
+
+  // 바다 배경 원
+  g.append('circle')
+    .attr('class', 'wl-ocean')
+    .attr('cx', MAP_CENTER).attr('cy', MAP_CENTER)
+    .attr('r', MAP_RADIUS)
+    .attr('fill', '#0a1628');
+
+  // 대륙 면 + 윤곽
+  if (topoData && typeof topojson !== 'undefined') {
+    const land = topojson.feature(topoData, topoData.objects.countries);
+    g.append('g').attr('class', 'wl-continents')
+      .selectAll('path')
+      .data(land.features)
+      .join('path')
+      .attr('d', _path)
+      .attr('fill', '#1a3355')
+      .attr('stroke', 'rgba(75,146,219,0.55)')
+      .attr('stroke-width', 0.6)
+      .attr('stroke-linejoin', 'round')
+      .attr('vector-effect', 'non-scaling-stroke');
   }
 
-  // 위도선 (parallels) — 30° 간격 (-60° ~ 90°)
-  for (let lat = -60; lat <= 90; lat += 30) {
-    const pts = [];
-    for (let lon = -180; lon <= 181; lon += 3) pts.push(latLonToVec3(lat, lon, R));
-    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat));
+  // Flat-earth 스타일 격자
+  const gratG = g.append('g').attr('class', 'wl-graticule');
+  _drawGraticule(gratG.node(), zoomLevel);
+
+  // 외곽 링 (최상단, pointer-events 없음)
+  g.append('circle')
+    .attr('class', 'wl-outer-ring')
+    .attr('cx', MAP_CENTER).attr('cy', MAP_CENTER)
+    .attr('r', MAP_RADIUS)
+    .attr('fill', 'none')
+    .attr('stroke', 'rgba(75,146,219,0.75)')
+    .attr('stroke-width', 1.8)
+    .attr('vector-effect', 'non-scaling-stroke')
+    .attr('pointer-events', 'none');
+
+  // 북극 중심점
+  g.append('circle')
+    .attr('cx', MAP_CENTER).attr('cy', MAP_CENTER)
+    .attr('r', 3)
+    .attr('fill', 'rgba(75,146,219,0.6)')
+    .attr('pointer-events', 'none');
+
+  // 경도 림 라벨
+  _drawRimLabels(g);
+}
+
+// ── 격자 갱신 (줌 레벨 변경 시 호출) ──────────────────────────────────────────
+
+export function updateGraticule(svgEl, zoomLevel) {
+  const el = d3.select(svgEl).select('.wl-graticule').node();
+  if (el) _drawGraticule(el, zoomLevel);
+}
+
+// ── 격자 렌더링 ─────────────────────────────────────────────────────────────────
+// L1: 24 자오선(15°) + 5 위선(30°간격)
+// L2: 동일 자오선 + 11 위선(15°간격)
+// L3: L2 + 트로픽·극권선(23.5°, 66.5°) 추가 + 보조 격자(7.5°)
+
+const PARALLEL_SETS = {
+  1: [0, 30, -30, 60, -60],
+  2: [0, 15, -15, 30, -30, 45, -45, 60, -60, 75, -75],
+  3: [0, 15, -15, 23.5, -23.5, 30, -30, 45, -45, 60, -60, 66.5, -66.5, 75, -75],
+};
+
+function _lineFeature(coords) {
+  return { type: 'Feature', geometry: { type: 'LineString', coordinates: coords } };
+}
+
+function _drawGraticule(el, zoomLevel) {
+  const g = d3.select(el);
+  g.selectAll('*').remove();
+
+  // 자오선 (방사형, 24개 = 15° 간격)
+  const meridianStep = zoomLevel === 3 ? 7.5 : 15;
+  for (let lon = -180; lon < 180; lon += meridianStep) {
+    const coords = [];
+    for (let lat = 89; lat >= -89; lat -= 1) coords.push([lon, lat]);
+    const isCardinal  = lon % 90 === 0;
+    const isOctant    = !isCardinal && lon % 45 === 0;
+    const isSub       = zoomLevel === 3 && (lon % 15 !== 0);
+    g.append('path')
+      .datum(_lineFeature(coords))
+      .attr('d', _path)
+      .attr('stroke', isCardinal ? 'rgba(75,146,219,0.5)'
+                     : isOctant  ? 'rgba(75,146,219,0.32)'
+                     : isSub     ? 'rgba(75,146,219,0.1)'
+                                 : 'rgba(75,146,219,0.18)')
+      .attr('stroke-width', isCardinal ? 1.0 : isSub ? 0.4 : 0.55)
+      .attr('fill', 'none')
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('pointer-events', 'none');
   }
 
-  return group;
+  // 위선 (동심원)
+  const lats = PARALLEL_SETS[zoomLevel] || PARALLEL_SETS[1];
+  lats.forEach(lat => {
+    const coords = [];
+    for (let lon = -180; lon <= 180; lon += 1) coords.push([lon, lat]);
+    const isEquator = lat === 0;
+    const isTropic  = Math.abs(Math.abs(lat) - 23.5) < 0.3;
+    const isArctic  = Math.abs(Math.abs(lat) - 66.5) < 0.3;
+    g.append('path')
+      .datum(_lineFeature(coords))
+      .attr('d', _path)
+      .attr('stroke', isEquator ? 'rgba(75,146,219,0.72)'
+                    : (isTropic || isArctic) ? 'rgba(75,146,219,0.38)'
+                    : 'rgba(75,146,219,0.18)')
+      .attr('stroke-width', isEquator ? 1.3 : 0.55)
+      .attr('stroke-dasharray', (isTropic || isArctic) ? '5 3' : null)
+      .attr('fill', 'none')
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('pointer-events', 'none');
+  });
 }
 
-/**
- * TopoJSON → Three.js 대륙 윤곽선
- * topojson 전역 객체가 로드되어 있어야 함
- */
-function _createContinents(topoData) {
-  if (!topoData || typeof topojson === 'undefined') return null;
+// ── 외곽 경도 라벨 ─────────────────────────────────────────────────────────────
 
-  const group = new THREE.Group();
-  const mat   = new THREE.LineBasicMaterial({
-    color: COLORS.continent,
-    transparent: true,
-    opacity: 0.75,
+const RIM_LONS = [
+  { lon: 0,    label: '0°'     },
+  { lon: 45,   label: '45°E'   },
+  { lon: 90,   label: '90°E'   },
+  { lon: 135,  label: '135°E'  },
+  { lon: 180,  label: '180°'   },
+  { lon: -135, label: '135°W'  },
+  { lon: -90,  label: '90°W'   },
+  { lon: -45,  label: '45°W'   },
+];
+
+function _drawRimLabels(g) {
+  const LABEL_R = MAP_RADIUS + 20;
+  RIM_LONS.forEach(({ lon, label }) => {
+    const pt = _proj([lon, -82]);  // 남극 근방 (외곽 가장자리)
+    if (!pt) return;
+    const dx   = pt[0] - MAP_CENTER;
+    const dy   = pt[1] - MAP_CENTER;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    const x    = MAP_CENTER + (dx / dist) * LABEL_R;
+    const y    = MAP_CENTER + (dy / dist) * LABEL_R;
+    const anchor = Math.abs(dx) < 12 ? 'middle' : dx > 0 ? 'start' : 'end';
+
+    g.append('text')
+      .attr('x', x).attr('y', y)
+      .attr('text-anchor', anchor)
+      .attr('dominant-baseline', 'middle')
+      .attr('fill', 'rgba(75,146,219,0.5)')
+      .attr('font-size', 10)
+      .attr('font-family', 'monospace')
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('pointer-events', 'none')
+      .text(label);
   });
-  const R = GLOBE_RADIUS + 0.004;
-
-  const geojson = topojson.feature(topoData, topoData.objects.countries);
-
-  geojson.features.forEach(feature => {
-    const { type, coordinates } = feature.geometry;
-    const polys = type === 'Polygon'      ? [coordinates]
-                : type === 'MultiPolygon' ? coordinates
-                : [];
-
-    polys.forEach(poly => {
-      poly.forEach(ring => {
-        if (ring.length < 2) return;
-        const pts = ring.map(([lon, lat]) => latLonToVec3(lat, lon, R));
-        group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat));
-      });
-    });
-  });
-
-  return group;
-}
-
-/**
- * 지구 그룹을 씬에 추가하고 반환
- * @param {THREE.Scene} scene
- * @param {object|null} topoData  TopoJSON world-atlas
- * @returns {THREE.Group}
- */
-export function createGlobe(scene, topoData) {
-  const group = new THREE.Group();
-  group.add(_createSphere());
-  group.add(_createGrid());
-
-  const continents = _createContinents(topoData);
-  if (continents) group.add(continents);
-
-  scene.add(group);
-  return group;
 }

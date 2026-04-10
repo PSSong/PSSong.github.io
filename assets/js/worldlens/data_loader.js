@@ -62,7 +62,7 @@ export function startAutoRefresh(onUpdate) {
       const data = await loadPositions();
       onUpdate(data);
     } catch (err) {
-      console.warn('[WorldLens] 자동 갱신 실패:', err.message);
+      console.warn('[WorldLens] Auto-refresh failed:', err.message);
     }
   }, CONFIG.refreshInterval);
 }
