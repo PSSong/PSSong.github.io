@@ -55,8 +55,10 @@ async function init() {
   }
 
   // ── 데이터 로드 ───────────────────────────────────────────────────────────────
+  let _lastPosData = null;
   try {
     const [posData, portsData] = await Promise.all([loadPositions(), loadPorts()]);
+    _lastPosData = posData;
     lm.updateData(_capData(posData), portsData);
   } catch (e) {
     console.error('[WorldLens] Data load failed:', e);
@@ -82,27 +84,41 @@ async function init() {
     if (cb) cb.addEventListener('change', () => lm.setLayerVisible(layer, cb.checked));
   });
 
+  // ── 밀도 토글 ─────────────────────────────────────────────────────────────────
+  const densityCb = document.getElementById('wl-density-hi');
+  if (densityCb) densityCb.addEventListener('change', () => {
+    _highDensity = densityCb.checked;
+    if (_lastPosData) lm.updateData(_capData(_lastPosData), null);
+  });
+
   // ── 5분 자동 갱신 ────────────────────────────────────────────────────────────
-  startAutoRefresh(newData => lm.updateData(_capData(newData), null));
+  startAutoRefresh(newData => {
+    _lastPosData = newData;
+    lm.updateData(_capData(newData), null);
+  });
 }
 
-// ── 데이터 상한 안전망 (SVG 60fps 경계 5,000의 80% = 4,000) ─────────────────
-const _CAP_TOTAL = 4000;
-const _CAP = { aircraft: 1200, vessel: 1800, satellite: 1000 };
+// ── 데이터 상한 안전망 (기본 2,000 / High Density 4,000) ──────────────────────
+const _CAP_TOTAL    = 2000;
+const _CAP_TOTAL_HI = 4000;
+const _CAP    = { aircraft:  600, vessel:  900, satellite:  500 };
+const _CAP_HI = { aircraft: 1200, vessel: 1800, satellite: 1000 };
+
+let _highDensity = false;
 
 function _capData(posData) {
   if (!posData) return posData;
-  const total = (posData.aircraft?.length ?? 0)
-              + (posData.vessels?.length  ?? 0)
-              + (posData.satellites?.length ?? 0);
-  if (total <= _CAP_TOTAL) return posData;
-
-  console.warn(`[WorldLens] ${total} items exceed cap ${_CAP_TOTAL} — per-layer caps applied`);
+  const cap    = _highDensity ? _CAP_TOTAL_HI : _CAP_TOTAL;
+  const capPer = _highDensity ? _CAP_HI       : _CAP;
+  const total  = (posData.aircraft?.length   ?? 0)
+               + (posData.vessels?.length    ?? 0)
+               + (posData.satellites?.length ?? 0);
+  if (total <= cap) return posData;
   return {
     ...posData,
-    aircraft:   (posData.aircraft   || []).slice(0, _CAP.aircraft),
-    vessels:    (posData.vessels    || []).slice(0, _CAP.vessel),
-    satellites: (posData.satellites || []).slice(0, _CAP.satellite),
+    aircraft:   (posData.aircraft   || []).slice(0, capPer.aircraft),
+    vessels:    (posData.vessels    || []).slice(0, capPer.vessel),
+    satellites: (posData.satellites || []).slice(0, capPer.satellite),
   };
 }
 
