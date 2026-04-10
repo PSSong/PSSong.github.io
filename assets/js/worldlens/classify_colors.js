@@ -1,84 +1,48 @@
 // 의존 모듈: 없음
 // 피의존 모듈: layers.js, interaction.js
-// 변경 시 영향: 색상 변경 시 CSS custom.css 범례 색상도 일관성 확인 필요
+// 변경 시 영향: 색상 변경 시 list.html 범례 색상도 확인
 
-// Three.js 색상 상수 (hex integers)
 export const COLORS = {
-  aircraft: {
-    civilian: 0x00DDFF,
-    unknown:  0x00AACC,
-    military: 0xFF4444,
-  },
-  vessel: {
-    civilian: 0xFF8800,
-    unknown:  0xCC6600,
-    military: 0xFF2222,
-  },
-  satellite: {
-    civilian: 0xFFDD00,
-    unknown:  0xCCAA00,
-    military: 0xFF6600,
-  },
-  port:    0xFFFFFF,
-  globe:   0x4B92DB,
-  grid:    0xFFFFFF,
-  continent: 0xFFFFFF,
+  aircraft:  { civilian: '#00DDFF', unknown: '#00AACC', military: '#FF4444' },
+  vessel:    { civilian: '#FF8800', unknown: '#CC6600', military: '#FF2222' },
+  satellite: { civilian: '#FFDD00', unknown: '#CCAA00', military: '#FF6600' },
+  port:      { mega: '#FFFFFF', major: '#CCCCCC', regional: '#888888', minor: '#555555' },
+  typhoon:   { TD: '#88BBFF', TS: '#AADDFF', 1: '#FFDD00', 2: '#FFAA00', 3: '#FF6600', 4: '#FF2200', 5: '#CC0000' },
 };
 
-// 국가 하이라이트 색상 (최대 3개국)
-export const HIGHLIGHT_COLORS = [
-  0x00FF88,  // 녹색
-  0xFF44AA,  // 자주색
-  0x44EEFF,  // 청록
-];
-
-// CSS hex 문자열 (칩 테두리 등 HTML에서 사용)
 export const HIGHLIGHT_HEX = ['#00FF88', '#FF44AA', '#44EEFF'];
 
-/**
- * 타입 + 분류에 따른 기본 hex 색상 반환
- * @param {'aircraft'|'vessel'|'satellite'|'port'} type
- * @param {'civilian'|'unknown'|'military'} classification
- */
-export function getColorHex(type, classification) {
-  const entry = COLORS[type];
-  if (typeof entry === 'number') return entry;
-  return entry[classification] || entry.civilian;
-}
-
-/**
- * 분류 필터 + 국가 하이라이트를 반영한 RGB 배열 반환
- * opacity는 색상 채도로 표현 (별도 geometry attribute 없이)
- * @returns {[r:number, g:number, b:number]} 0~1 범위
- */
-export function getVertexColor(type, classification, country, filters, selectedCountries) {
-  // 필터 off → 검은색으로 숨김
-  if (filters && !filters[classification]) {
-    return [0, 0, 0];
-  }
-
-  // 국가 하이라이트 모드
-  if (selectedCountries && selectedCountries.length > 0) {
+/** 타입 + item으로 CSS 색상 문자열 반환 (국가 하이라이트 포함) */
+export function getColor(type, item, selectedCountries) {
+  if (selectedCountries && selectedCountries.length) {
+    const country = item.country || item.origin_country || '';
     const idx = selectedCountries.indexOf(country);
-    if (idx >= 0) {
-      const c = new THREE.Color(HIGHLIGHT_COLORS[idx]);
-      return [c.r, c.g, c.b];
-    }
-    // 비선택 국가 → 어둡게
-    const hex = getColorHex(type, classification);
-    const c = new THREE.Color(hex);
-    return [c.r * 0.1, c.g * 0.1, c.b * 0.1];
+    if (idx >= 0) return HIGHLIGHT_HEX[idx];
+    if (type !== 'port' && type !== 'typhoon') return 'rgba(255,255,255,0.06)';
   }
-
-  // 기본 색상
-  const hex = getColorHex(type, classification);
-  const c = new THREE.Color(hex);
-  return [c.r, c.g, c.b];
+  if (type === 'port') return COLORS.port[item.type] ?? COLORS.port.minor;
+  if (type === 'typhoon') {
+    const cat = String(item.category ?? 'TS');
+    return COLORS.typhoon[cat] ?? COLORS.typhoon.TS;
+  }
+  const cls = (item.classification || 'unknown').toLowerCase();
+  return COLORS[type]?.[cls] ?? '#FFFFFF';
 }
 
-/**
- * 필터 off 여부 판단 (포인트를 아예 숨길지)
- */
-export function isVisible(classification, filters) {
-  return !filters || filters[classification] !== false;
+/** 항구 사각형 반변(SVG 내부 단위) */
+export function getPortHalfSize(portType) {
+  return { mega: 5, major: 3.5, regional: 2.5, minor: 1.5 }[portType] ?? 1.5;
+}
+
+/** 태풍 원 반지름(SVG 내부 단위) */
+export function getTyphoonRadius(category) {
+  const cat = String(category ?? 'TS');
+  return { TD: 8, TS: 10, 1: 13, 2: 17, 3: 21, 4: 25, 5: 29 }[cat] ?? 10;
+}
+
+/** 분류 필터 가시성 */
+export function isVisible(item, filters) {
+  if (!filters) return true;
+  const cls = (item.classification || 'unknown').toLowerCase();
+  return filters[cls] !== false;
 }
