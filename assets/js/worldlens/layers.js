@@ -1,5 +1,5 @@
 // Package layers: SVG 데이터 레이어 (항공·선박·위성·항구·태풍) + 클러스터링
-// 의존: globe.js (project, getPath), classify_colors.js
+// 의존: globe.js (project, getPath), classify_colors.js, window.WL (WASM — spiral_path, cluster_l1)
 // 피의존: main.js, interaction.js
 // 변경 시 영향: positions.json 스키마 변경 시 updateData() 파라미터 확인
 
@@ -8,10 +8,6 @@ import { getColor, getPortHalfSize, getTyphoonRadius, isVisible } from './classi
 
 // SVG 내부 단위 기준 포인트 반지름 (zoom-aware 크기는 interaction.js에서 갱신)
 const BASE_R = { aircraft: 5, vessel: 5.5, satellite: 4, port: 4, typhoon: 10 };
-
-// 클러스터링: 셀 크기 (SVG 내부 단위 = 1000 기준)
-const CLUSTER_CELL   = 38;
-const CLUSTER_THRESH = 3;   // L1에서 셀당 이 수 이상이면 클러스터 버블
 
 // ── 태풍 유틸 (모듈 스코프) ─────────────────────────────────────────────────────
 
@@ -48,30 +44,16 @@ function _isNH(t) {
 }
 
 /**
- * 3팔 아르키메데스 나선 SVG path (로컬 좌표 ±R, translate 그룹 전용)
+ * 3팔 나선 SVG path — WASM worldlens-core 위임, JS Map 캐시 유지
  * @param {number} R  최대 반지름 (SVG 단위)
- * @param {boolean} cw true = 북반구(SVG 시계방향 = 지리적 반시계)
+ * @param {boolean} cw true = 북반구
  */
-const _spiralCache = {};
+const _spiralCache = new Map();
 function _spiralPath(R, cw) {
   const key = `${R}_${cw}`;
-  if (_spiralCache[key]) return _spiralCache[key];
-
-  const ARMS = 3, TURNS = 1.5, STEPS = 32;
-  const eyeR = R * 0.15;
-  let d = '';
-  for (let arm = 0; arm < ARMS; arm++) {
-    const offset = (arm / ARMS) * 2 * Math.PI;
-    for (let i = 0; i <= STEPS; i++) {
-      const t     = i / STEPS;
-      const r     = eyeR + (R - eyeR) * t;
-      const angle = offset + (cw ? 1 : -1) * t * TURNS * 2 * Math.PI;
-      const x     = (r * Math.cos(angle)).toFixed(2);
-      const y     = (r * Math.sin(angle)).toFixed(2);
-      d += i === 0 ? `M${x},${y}` : `L${x},${y}`;
-    }
-  }
-  _spiralCache[key] = d;
+  if (_spiralCache.has(key)) return _spiralCache.get(key);
+  const d = window.WL ? window.WL.spiral_path(R, cw) : '';
+  if (d) _spiralCache.set(key, d);
   return d;
 }
 
@@ -175,63 +157,60 @@ export class LayerManager {
 
   _renderClustered(g, items, type) {
     const r = BASE_R[type];
-    const cells = {};
+    if (!window.WL || !items.length) return;
 
-    items.forEach(item => {
-      const pt = project(item.lon, item.lat);
-      if (!pt) return;
-      const bx  = Math.floor(pt[0] / CLUSTER_CELL);
-      const by  = Math.floor(pt[1] / CLUSTER_CELL);
-      const key = `${bx},${by}`;
-      if (!cells[key]) cells[key] = { items: [], sx: 0, sy: 0 };
-      cells[key].items.push({ item, pt });
-      cells[key].sx += pt[0];
-      cells[key].sy += pt[1];
+    // coords: flat Float64Array [lon0,lat0,lon1,lat1,...]
+    const coords = new Float64Array(items.length * 2);
+    const metaArr = [];
+    items.forEach((item, i) => {
+      coords[i * 2]     = item.lon;
+      coords[i * 2 + 1] = item.lat;
+      metaArr.push({
+        cls:     (item.classification || 'unknown').toLowerCase(),
+        country: item.country || item.origin_country || '',
+        type,
+      });
     });
 
-    Object.values(cells).forEach(cell => {
-      const n  = cell.items.length;
-      const cx = cell.sx / n;
-      const cy = cell.sy / n;
+    const filtersStr = JSON.stringify(this.filters);
+    const metaStr    = JSON.stringify(metaArr);
+    let result;
+    try {
+      result = JSON.parse(window.WL.cluster_l1(coords, metaStr, filtersStr));
+    } catch (_) { return; }
 
-      if (n >= CLUSTER_THRESH) {
-        // 클러스터 버블
-        const fill = getColor(type, cell.items[0].item, this.selected);
-        g.append('circle')
-          .attr('class', 'wl-cluster')
-          .attr('cx', cx).attr('cy', cy)
-          .attr('r', r + 3 + Math.min(n, 20) * 0.4)
-          .attr('fill', fill)
-          .attr('fill-opacity', 0.25)
-          .attr('stroke', fill)
-          .attr('stroke-width', 1)
-          .attr('vector-effect', 'non-scaling-stroke');
-        g.append('text')
-          .attr('x', cx).attr('y', cy)
-          .attr('text-anchor', 'middle')
-          .attr('dominant-baseline', 'central')
-          .attr('fill', fill)
-          .attr('font-size', 9)
-          .attr('font-weight', 'bold')
-          .attr('pointer-events', 'none')
-          .attr('vector-effect', 'non-scaling-stroke')
-          .text(n > 99 ? '99+' : n);
-      } else {
-        // 개별 포인트
-        cell.items.forEach(({ item, pt }) => {
-          const fill = getColor(type, item, this.selected);
-          g.append('circle')
-            .attr('class', `wl-pt wl-pt-${type}`)
-            .attr('cx', pt[0]).attr('cy', pt[1])
-            .attr('r', r)
-            .attr('fill', fill)
-            .attr('fill-opacity', 0.85)
-            .attr('stroke', 'rgba(0,0,0,0.3)')
-            .attr('stroke-width', 0.5)
-            .attr('vector-effect', 'non-scaling-stroke')
-            .datum({ type, item });
-        });
-      }
+    (result.clusters || []).forEach(({ cx, cy, count, color, r: cr }) => {
+      g.append('circle')
+        .attr('class', 'wl-cluster')
+        .attr('cx', cx).attr('cy', cy)
+        .attr('r', cr)
+        .attr('fill', color)
+        .attr('fill-opacity', 0.25)
+        .attr('stroke', color)
+        .attr('stroke-width', 1)
+        .attr('vector-effect', 'non-scaling-stroke');
+      g.append('text')
+        .attr('x', cx).attr('y', cy)
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'central')
+        .attr('fill', color)
+        .attr('font-size', 9)
+        .attr('font-weight', 'bold')
+        .attr('pointer-events', 'none')
+        .attr('vector-effect', 'non-scaling-stroke')
+        .text(count > 99 ? '99+' : count);
+    });
+
+    (result.points || []).forEach(({ x, y, color }) => {
+      g.append('circle')
+        .attr('class', `wl-pt wl-pt-${type}`)
+        .attr('cx', x).attr('cy', y)
+        .attr('r', r)
+        .attr('fill', color)
+        .attr('fill-opacity', 0.85)
+        .attr('stroke', 'rgba(0,0,0,0.3)')
+        .attr('stroke-width', 0.5)
+        .attr('vector-effect', 'non-scaling-stroke');
     });
   }
 

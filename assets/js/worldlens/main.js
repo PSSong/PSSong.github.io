@@ -1,6 +1,8 @@
 // 의존 모듈: globe.js, layers.js, interaction.js, data_loader.js
+//            /js/worldlens/wasm/worldlens_core.js (WASM, 런타임 dynamic import)
 // 피의존 모듈: 없음 (엔트리포인트)
 // 변경 시 영향: SVG 구조 변경 시 interaction.js setupZoom() 그룹 참조 확인
+//            WASM 경로(/js/worldlens/wasm/) 변경 시 static/ 동기화 필수
 
 import { createProjection, createBasemap } from './globe.js';
 import { LayerManager }                    from './layers.js';
@@ -11,6 +13,17 @@ async function init() {
   const svgEl   = document.getElementById('wl-svg');
   const zoomGEl = document.getElementById('wl-zoom-g');
   if (!svgEl || !zoomGEl) return;
+
+  // ── WASM 초기화 (IP 보호 함수: project, spiral_path, get_color, is_visible, cluster_l1) ──
+  try {
+    const wl = await import('/js/worldlens/wasm/worldlens_core.js');
+    await wl.default({ module_or_path: '/worldlens/wasm/worldlens_core_bg.wasm' });
+    window.WL = wl;
+  } catch (_) {
+    const el = document.getElementById('wl-stats');
+    if (el) el.textContent = '초기화 실패 — 새로고침 시도';
+    return;
+  }
 
   // ── 투영 초기화 ───────────────────────────────────────────────────────────────
   createProjection();

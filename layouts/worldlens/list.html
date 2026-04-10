@@ -1,11 +1,13 @@
 {{- /*
   의존 모듈: assets/js/worldlens/main.js, d3 v7 CDN, topojson CDN
+             /js/worldlens/wasm/worldlens_core.js (WASM, 런타임 로드)
   피의존 모듈: content/worldlens/_index.md
   변경 시 영향: CDN URL 변경 시 확인 / SVG 그룹 ID 변경 시 main.js setGroups() 동기화
   참고: PaperMod 서브모듈이 워크트리에 없으므로 독립형 HTML
         Three.js → D3 v7 + SVG 전환 (2D AE 투영)
+        target es2020: dynamic import() 지원 필수 (WASM 로딩)
 */ -}}
-{{- $js := resources.Get "js/worldlens/main.js" | js.Build (dict "minify" true "target" "es2017") -}}
+{{- $js := resources.Get "js/worldlens/main.js" | js.Build (dict "minify" true "target" "es2020") -}}
 <!DOCTYPE html>
 <html lang="{{ .Site.Language.Lang | default "en" }}" dir="ltr">
 <head>
@@ -266,8 +268,12 @@
   </div>
 
   {{/* ── CDN: D3 v7 + TopoJSON (Three.js 제거) ── */}}
-  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"
+          integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i"
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"
+          integrity="sha384-9dCJK6nh7skY14HrcvlLYlFga9/MehJjL9ONWRflmiXNRuf8p2jiF4Y5PR881PTq"
+          crossorigin="anonymous"></script>
   <script src="{{ $js.RelPermalink }}"></script>
 
 </body>

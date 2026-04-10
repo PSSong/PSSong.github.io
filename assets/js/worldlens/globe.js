@@ -1,7 +1,7 @@
 // Package globe: D3 북극중심 방위등거리 투영(AE), 베이스맵, flat-earth 스타일 격자
-// 의존: d3, topojson (global CDN), classify_colors.js
+// 의존: d3, topojson (global CDN), window.WL (WASM — project)
 // 피의존: main.js (createBasemap), layers.js (project), interaction.js (updateGraticule)
-// 변경 시 영향: MAP_CENTER/MAP_RADIUS 변경 시 layers.js project() 및 interaction.js 범위 확인
+// 변경 시 영향: MAP_CENTER/MAP_RADIUS는 worldlens-core Rust 상수와 동기화 필수
 
 export const MAP_SIZE   = 1000;
 export const MAP_CENTER = 500;   // SVG 중심 = 북극
@@ -22,9 +22,11 @@ export function createProjection() {
   return { projection: _proj, path: _path };
 }
 
-/** lon/lat → SVG [x, y]. 투영 범위 밖이면 null 반환 */
+/** lon/lat → SVG [x, y]. WASM worldlens-core 위임. 미초기화 시 null 반환 */
 export function project(lon, lat) {
-  return _proj ? _proj([lon, lat]) : null;
+  if (!window.WL) return null;
+  const pt = window.WL.project(lon, lat);
+  return pt && pt.length === 2 ? [pt[0], pt[1]] : null;
 }
 
 export function getPath() { return _path; }

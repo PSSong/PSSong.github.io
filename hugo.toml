@@ -115,6 +115,11 @@ buildFuture = true
 [outputs]
   home = ["HTML", "RSS", "JSON"]
 
+# WASM MIME 타입
+[mediaTypes]
+  [mediaTypes."application/wasm"]
+    suffixes = ["wasm"]
+
 # 마크업 설정
 [markup]
   [markup.highlight]

@@ -1,6 +1,6 @@
-// 의존 모듈: 없음
+// 의존 모듈: window.WL (WASM — get_color, is_visible)
 // 피의존 모듈: layers.js, interaction.js
-// 변경 시 영향: 색상 변경 시 list.html 범례 색상도 확인
+// 변경 시 영향: 색상/분류 로직은 worldlens-core Rust에서 관리, 이 파일은 얇은 바인딩
 
 export const COLORS = {
   aircraft:  { civilian: '#00DDFF', unknown: '#00AACC', military: '#FF4444' },
@@ -12,21 +12,15 @@ export const COLORS = {
 
 export const HIGHLIGHT_HEX = ['#00FF88', '#FF44AA', '#44EEFF'];
 
-/** 타입 + item으로 CSS 색상 문자열 반환 (국가 하이라이트 포함) */
+/** 타입 + item으로 CSS 색상 문자열 반환 (WASM worldlens-core 위임) */
 export function getColor(type, item, selectedCountries) {
-  if (selectedCountries && selectedCountries.length) {
-    const country = item.country || item.origin_country || '';
-    const idx = selectedCountries.indexOf(country);
-    if (idx >= 0) return HIGHLIGHT_HEX[idx];
-    if (type !== 'port' && type !== 'typhoon') return 'rgba(255,255,255,0.06)';
-  }
-  if (type === 'port') return COLORS.port[item.type] ?? COLORS.port.minor;
-  if (type === 'typhoon') {
-    const cat = String(item.category ?? 'TS');
-    return COLORS.typhoon[cat] ?? COLORS.typhoon.TS;
-  }
-  const cls = (item.classification || 'unknown').toLowerCase();
-  return COLORS[type]?.[cls] ?? '#FFFFFF';
+  const cls     = type === 'port'    ? (item.type ?? 'minor')
+                : type === 'typhoon' ? String(item.category ?? 'TS')
+                : (item.classification || 'unknown').toLowerCase();
+  const country  = item.country || item.origin_country || '';
+  const selJson  = selectedCountries && selectedCountries.length
+                   ? JSON.stringify(selectedCountries) : '[]';
+  return window.WL ? window.WL.get_color(type, cls, country, selJson) : '#FFFFFF';
 }
 
 /** 항구 사각형 반변(SVG 내부 단위) */
@@ -40,9 +34,10 @@ export function getTyphoonRadius(category) {
   return { TD: 8, TS: 11, 1: 14, 2: 17, 3: 21, 4: 25, 5: 30 }[cat] ?? 11;
 }
 
-/** 분류 필터 가시성 */
+/** 분류 필터 가시성 (WASM worldlens-core 위임) */
 export function isVisible(item, filters) {
-  if (!filters) return true;
-  const cls = (item.classification || 'unknown').toLowerCase();
-  return filters[cls] !== false;
+  if (!filters || !window.WL) return true;
+  const cls        = (item.classification || 'unknown').toLowerCase();
+  const filtersStr = JSON.stringify(filters);
+  return window.WL.is_visible(cls, filtersStr);
 }
