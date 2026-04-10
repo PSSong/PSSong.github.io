@@ -129,6 +129,12 @@ export function setupTooltip() {
 
 export function setupHover(svgEl, tooltip) {
   const svg = d3.select(svgEl);
+  let _pinnedTrack = null;  // 클릭으로 고정된 태풍 <g> 요소
+
+  // 태풍 예측 경로 show/hide 헬퍼
+  function _showTrack(typhoonEl, show) {
+    d3.select(typhoonEl).select('.wl-typhoon-track').style('display', show ? null : 'none');
+  }
 
   // 이벤트 위임: wl-pt 클래스가 있는 모든 SVG 요소
   svg.on('mouseover', event => {
@@ -137,6 +143,8 @@ export function setupHover(svgEl, tooltip) {
     const data = d3.select(el).datum();
     if (!data) return;
     tooltip.show(event.clientX, event.clientY, _tooltipHtml(data.type, data.item));
+    // 태풍: 호버 시 경로 표시 (고정 중이 아닌 것만)
+    if (data.type === 'typhoon' && el !== _pinnedTrack) _showTrack(el, true);
   });
 
   svg.on('mousemove', event => {
@@ -147,15 +155,36 @@ export function setupHover(svgEl, tooltip) {
   });
 
   svg.on('mouseout', event => {
-    if (!event.target.closest('.wl-pt')) tooltip.hide();
-  });
-
-  // 모바일 탭
-  svg.on('click', event => {
     const el = event.target.closest('.wl-pt');
     if (!el) { tooltip.hide(); return; }
+    // 태풍: 마우스 아웃 시 경로 숨김 (고정 아닌 것만)
     const data = d3.select(el).datum();
-    if (data) tooltip.show(event.clientX, event.clientY, _tooltipHtml(data.type, data.item));
+    if (data?.type === 'typhoon' && el !== _pinnedTrack) _showTrack(el, false);
+  });
+
+  // 클릭: 태풍 경로 고정/해제 + 모바일 탭 툴팁
+  svg.on('click', event => {
+    const el = event.target.closest('.wl-pt');
+    if (!el) {
+      // 빈 곳 클릭 → 고정 해제
+      if (_pinnedTrack) { _showTrack(_pinnedTrack, false); _pinnedTrack = null; }
+      tooltip.hide();
+      return;
+    }
+    const data = d3.select(el).datum();
+    if (!data) return;
+    tooltip.show(event.clientX, event.clientY, _tooltipHtml(data.type, data.item));
+
+    if (data.type === 'typhoon') {
+      if (_pinnedTrack && _pinnedTrack !== el) {
+        // 다른 태풍 → 이전 고정 해제
+        _showTrack(_pinnedTrack, false);
+      }
+      // 같은 태풍 재클릭 → 토글
+      const isNowPinned = _pinnedTrack === el;
+      _pinnedTrack = isNowPinned ? null : el;
+      _showTrack(el, !isNowPinned);
+    }
   });
 }
 
@@ -184,13 +213,26 @@ function _tooltipHtml(type, item) {
         <div>국가: <em>${item.country || '-'}</em></div>
         <div>등급: ${item.type || '-'}</div>
         <div>코드: ${item.locode || '-'}</div>`;
-    case 'typhoon':
+    case 'typhoon': {
+      const windKt  = item.wind_speed_kt ?? item.max_wind_kt;
+      const movDir  = _typhoonDir(item);
       return `<b>${item.name || '태풍'}</b>
-        <div>카테고리: <em>Cat ${item.category ?? '-'}</em></div>
-        <div>풍속: ${item.wind_speed_kt != null ? item.wind_speed_kt + ' kt' : '-'}</div>
-        <div>위치: ${item.lat?.toFixed(1)}°N, ${item.lon?.toFixed(1)}°</div>`;
+        <div>카테고리: <em>${item.category ?? '-'}</em></div>
+        <div>최대 풍속: ${windKt != null ? windKt + ' kt' : '-'}</div>
+        <div>이동 방향: ${movDir}</div>
+        <div>위치: ${item.lat?.toFixed(1)}°, ${item.lon?.toFixed(1)}°</div>`;
+    }
     default: return '';
   }
+}
+
+/** 태풍 이동 방향 — 예측 경로 첫 포인트로 방위 계산 */
+function _typhoonDir(item) {
+  const first = (item.track || []).find(p => p.type === 'forecast');
+  if (!first || item.lat == null) return '-';
+  const deg = (Math.atan2(first.lon - item.lon, first.lat - item.lat) * 180 / Math.PI + 360) % 360;
+  const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  return dirs[Math.round(deg / 45) % 8];
 }
 
 // ── 국가 선택기 ─────────────────────────────────────────────────────────────────

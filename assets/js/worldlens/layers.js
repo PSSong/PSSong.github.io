@@ -13,6 +13,68 @@ const BASE_R = { aircraft: 5, vessel: 5.5, satellite: 4, port: 4, typhoon: 10 };
 const CLUSTER_CELL   = 38;
 const CLUSTER_THRESH = 3;   // L1에서 셀당 이 수 이상이면 클러스터 버블
 
+// ── 태풍 유틸 (모듈 스코프) ─────────────────────────────────────────────────────
+
+/**
+ * WorldLens 파이프라인 스키마 → 내부 형식 정규화
+ * - center_lat/lon → lat/lon
+ * - "C1"~"C5" → "1"~"5"
+ * - forecast_track → track (type:'forecast' 배열)
+ * - max_wind_kt → wind_speed_kt
+ */
+function _normTyphoon(raw) {
+  return {
+    ...raw,
+    lat:           raw.lat           ?? raw.center_lat,
+    lon:           raw.lon           ?? raw.center_lon,
+    category:      _normCategory(raw.category),
+    wind_speed_kt: raw.wind_speed_kt ?? raw.max_wind_kt,
+    track: raw.track
+      ?? (raw.forecast_track || []).map(p => ({ lon: p.lon, lat: p.lat, type: 'forecast' })),
+  };
+}
+
+/** "C1"~"C5" → "1"~"5", 나머지(TD·TS·1~5)는 그대로 */
+function _normCategory(cat) {
+  const s = String(cat ?? 'TS');
+  return /^C(\d)$/.test(s) ? s.slice(1) : s;
+}
+
+/** basin 또는 위도 기반 반구 판별 — true = 북반구(SVG CW) */
+function _isNH(t) {
+  const SH_BASINS = ['SI', 'SP', 'AU', 'SH'];
+  if (t.basin && SH_BASINS.includes(String(t.basin).toUpperCase())) return false;
+  return (t.lat ?? 0) >= 0;
+}
+
+/**
+ * 3팔 아르키메데스 나선 SVG path (로컬 좌표 ±R, translate 그룹 전용)
+ * @param {number} R  최대 반지름 (SVG 단위)
+ * @param {boolean} cw true = 북반구(SVG 시계방향 = 지리적 반시계)
+ */
+const _spiralCache = {};
+function _spiralPath(R, cw) {
+  const key = `${R}_${cw}`;
+  if (_spiralCache[key]) return _spiralCache[key];
+
+  const ARMS = 3, TURNS = 1.5, STEPS = 32;
+  const eyeR = R * 0.15;
+  let d = '';
+  for (let arm = 0; arm < ARMS; arm++) {
+    const offset = (arm / ARMS) * 2 * Math.PI;
+    for (let i = 0; i <= STEPS; i++) {
+      const t     = i / STEPS;
+      const r     = eyeR + (R - eyeR) * t;
+      const angle = offset + (cw ? 1 : -1) * t * TURNS * 2 * Math.PI;
+      const x     = (r * Math.cos(angle)).toFixed(2);
+      const y     = (r * Math.sin(angle)).toFixed(2);
+      d += i === 0 ? `M${x},${y}` : `L${x},${y}`;
+    }
+  }
+  _spiralCache[key] = d;
+  return d;
+}
+
 export class LayerManager {
   constructor() {
     this.filters  = { civilian: true, unknown: true, military: true };
@@ -204,79 +266,69 @@ export class LayerManager {
     if (!this.layers.typhoon || !typhoons.length) return;
 
     const path = getPath();
-    typhoons.forEach(t => {
+    typhoons.forEach(raw => {
+      const t  = _normTyphoon(raw);
       if (t.lat == null || t.lon == null) return;
-      const fill = getColor('typhoon', t, []);
-      const r    = getTyphoonRadius(t.category);
-
-      // 과거 경로 (실선)
-      if (t.track && t.track.length > 1) {
-        const pastCoords = t.track
-          .filter(p => p.type !== 'forecast')
-          .map(p => [p.lon, p.lat]);
-        if (pastCoords.length > 1 && path) {
-          g.append('path')
-            .datum({ type: 'Feature', geometry: { type: 'LineString', coordinates: pastCoords } })
-            .attr('d', path)
-            .attr('stroke', fill)
-            .attr('stroke-width', 2.5)
-            .attr('stroke-opacity', 0.5)
-            .attr('fill', 'none')
-            .attr('vector-effect', 'non-scaling-stroke');
-        }
-        // 예측 경로 (점선)
-        const forecastCoords = [[t.lon, t.lat],
-          ...t.track.filter(p => p.type === 'forecast').map(p => [p.lon, p.lat])];
-        if (forecastCoords.length > 1 && path) {
-          g.append('path')
-            .datum({ type: 'Feature', geometry: { type: 'LineString', coordinates: forecastCoords } })
-            .attr('d', path)
-            .attr('stroke', fill)
-            .attr('stroke-width', 2)
-            .attr('stroke-opacity', 0.4)
-            .attr('stroke-dasharray', '5 4')
-            .attr('fill', 'none')
-            .attr('vector-effect', 'non-scaling-stroke');
-        }
-      }
-
-      // 풍속 반경 원 (있을 경우)
-      if (t.radius_km) {
-        // 위도에 따른 AE 투영 반지름 근사
-        const pt0 = project(t.lon, t.lat);
-        const pt1 = project(t.lon, t.lat + t.radius_km / 111.0);
-        if (pt0 && pt1) {
-          const svgR = Math.abs(pt1[1] - pt0[1]);
-          g.append('circle')
-            .attr('cx', pt0[0]).attr('cy', pt0[1])
-            .attr('r', svgR)
-            .attr('fill', fill).attr('fill-opacity', 0.07)
-            .attr('stroke', fill).attr('stroke-opacity', 0.2)
-            .attr('stroke-width', 1)
-            .attr('vector-effect', 'non-scaling-stroke')
-            .attr('pointer-events', 'none');
-        }
-      }
-
-      // 현재 위치 원
       const pt = project(t.lon, t.lat);
       if (!pt) return;
-      g.append('circle')
+
+      const fill = getColor('typhoon', t, []);
+      const R    = getTyphoonRadius(t.category);
+      const cw   = _isNH(t);
+
+      // ── translate 그룹 (datum + class for hover delegation) ─────────────
+      const grp = g.append('g')
         .attr('class', 'wl-pt wl-pt-typhoon')
-        .attr('cx', pt[0]).attr('cy', pt[1])
-        .attr('r', r)
-        .attr('fill', fill)
-        .attr('fill-opacity', 0.75)
-        .attr('stroke', '#fff')
-        .attr('stroke-width', 1.2)
-        .attr('stroke-opacity', 0.8)
-        .attr('vector-effect', 'non-scaling-stroke')
+        .attr('transform', `translate(${pt[0].toFixed(2)},${pt[1].toFixed(2)})`)
         .datum({ type: 'typhoon', item: t });
 
-      // 이름 라벨 (L2+)
+      // ── 예측 경로 (기본 숨김 — R4b 호버 시 표시) ────────────────────────
+      const forecastPts = (t.track || []).filter(p => p.type === 'forecast');
+      if (forecastPts.length > 0 && path) {
+        const coords = [[t.lon, t.lat], ...forecastPts.map(p => [p.lon, p.lat])];
+        grp.append('path')
+          .attr('class', 'wl-typhoon-track')
+          // 경로는 절대 SVG 좌표 → 그룹 translate 역보정
+          .attr('transform', `translate(${(-pt[0]).toFixed(2)},${(-pt[1]).toFixed(2)})`)
+          .datum({ type: 'Feature', geometry: { type: 'LineString', coordinates: coords } })
+          .attr('d', path)
+          .attr('stroke', fill)
+          .attr('stroke-width', 2)
+          .attr('stroke-opacity', 0.55)
+          .attr('stroke-dasharray', '5 4')
+          .attr('fill', 'none')
+          .attr('vector-effect', 'non-scaling-stroke')
+          .attr('pointer-events', 'none')
+          .style('display', 'none');
+      }
+
+      // ── 나선 팔 ──────────────────────────────────────────────────────────
+      grp.append('path')
+        .attr('d', _spiralPath(R, cw))
+        .attr('stroke', fill)
+        .attr('stroke-width', 1.5)
+        .attr('stroke-opacity', 0.88)
+        .attr('fill', 'none')
+        .attr('vector-effect', 'non-scaling-stroke')
+        .attr('pointer-events', 'none');
+
+      // ── 태풍의 눈 ────────────────────────────────────────────────────────
+      grp.append('circle')
+        .attr('r', Math.max(2, R * 0.15))
+        .attr('fill', fill)
+        .attr('fill-opacity', 0.9)
+        .attr('pointer-events', 'none');
+
+      // ── 투명 히트 영역 (hover/click 감지) ───────────────────────────────
+      grp.append('circle')
+        .attr('r', R + 4)
+        .attr('fill', 'transparent')
+        .attr('stroke', 'none');
+
+      // ── L2+ 이름 라벨 ────────────────────────────────────────────────────
       if (this._zoomLevel >= 2 && t.name) {
-        g.append('text')
-          .attr('x', pt[0] + r + 4).attr('y', pt[1])
+        grp.append('text')
+          .attr('x', R + 4)
           .attr('dominant-baseline', 'central')
           .attr('fill', fill)
           .attr('font-size', 11)

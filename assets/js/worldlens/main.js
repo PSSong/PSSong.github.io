@@ -44,7 +44,7 @@ async function init() {
   // ── 데이터 로드 ───────────────────────────────────────────────────────────────
   try {
     const [posData, portsData] = await Promise.all([loadPositions(), loadPorts()]);
-    lm.updateData(posData, portsData);
+    lm.updateData(_capData(posData), portsData);
   } catch (e) {
     console.error('[WorldLens] 데이터 로드 실패:', e);
     const el = document.getElementById('wl-stats');
@@ -70,7 +70,27 @@ async function init() {
   });
 
   // ── 5분 자동 갱신 ────────────────────────────────────────────────────────────
-  startAutoRefresh(newData => lm.updateData(newData, null));
+  startAutoRefresh(newData => lm.updateData(_capData(newData), null));
+}
+
+// ── 데이터 상한 안전망 (SVG 60fps 경계 5,000의 80% = 4,000) ─────────────────
+const _CAP_TOTAL = 4000;
+const _CAP = { aircraft: 1200, vessel: 1800, satellite: 1000 };
+
+function _capData(posData) {
+  if (!posData) return posData;
+  const total = (posData.aircraft?.length ?? 0)
+              + (posData.vessels?.length  ?? 0)
+              + (posData.satellites?.length ?? 0);
+  if (total <= _CAP_TOTAL) return posData;
+
+  console.warn(`[WorldLens] 데이터 ${total}개 > 상한 ${_CAP_TOTAL}개 — 레이어별 상한 적용`);
+  return {
+    ...posData,
+    aircraft:   (posData.aircraft   || []).slice(0, _CAP.aircraft),
+    vessels:    (posData.vessels    || []).slice(0, _CAP.vessel),
+    satellites: (posData.satellites || []).slice(0, _CAP.satellite),
+  };
 }
 
 if (document.readyState === 'loading') {

@@ -34,10 +34,10 @@ export function getPortHalfSize(portType) {
   return { mega: 5, major: 3.5, regional: 2.5, minor: 1.5 }[portType] ?? 1.5;
 }
 
-/** 태풍 원 반지름(SVG 내부 단위) */
+/** 태풍 나선 아이콘 반지름(SVG 내부 단위) — 카테고리별 크기 */
 export function getTyphoonRadius(category) {
   const cat = String(category ?? 'TS');
-  return { TD: 8, TS: 10, 1: 13, 2: 17, 3: 21, 4: 25, 5: 29 }[cat] ?? 10;
+  return { TD: 8, TS: 11, 1: 14, 2: 17, 3: 21, 4: 25, 5: 30 }[cat] ?? 11;
 }
 
 /** 분류 필터 가시성 */
