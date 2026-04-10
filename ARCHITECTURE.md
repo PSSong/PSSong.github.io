@@ -67,3 +67,41 @@ docs/                       프로젝트 문서
 | WorldLens WASM API | `docs/worldlens/WASM_INTERFACE.md` |
 | WorldLens 보안 | `docs/worldlens/SECURITY.md` |
 | WorldLens 변경 이력 | `docs/worldlens/CHANGELOG.md` |
+
+---
+
+## trading_bot 연계 (콘텐츠 파이프라인)
+
+→ trading_bot 측 문서: `~/Desktop/trading_bot/CLAUDE.md` — "8. pssong-blog 연계" 섹션
+
+`~/Desktop/trading_bot/`의 자동화 파이프라인이 이 저장소에 직접 기사를 생성·커밋·푸시합니다.
+
+### 흐름
+
+```
+trading_bot/blog_pipeline.py
+  → content/posts/YYYY-MM-DD-slug.md 생성 (draft: true, 한국어)
+
+trading_bot/blog_telegram.py (텔레그램 승인 후)
+  → gemma4:26b 영어 번역 → draft: false
+  → git add/commit/push origin main
+  → GitHub Actions 트리거 → Hugo 빌드 → GitHub Pages 배포
+
+trading_bot/weekly_digest.py (매주 월 KST 00:30)
+  → 7일치 tags_history 클러스터링 → 주간 종합 기사 → 동일 플로우
+```
+
+### 생성 파일
+
+- `content/posts/YYYY-MM-DD-*.md` — trading_bot 자동 생성 기사
+- 수동 편집 파일과 동일 디렉터리 사용 — 슬러그 충돌 주의
+
+### Hugo frontmatter 계약
+
+| 필드 | 설명 |
+|------|------|
+| `draft` | 생성 시 `true`, 승인 후 `false` |
+| `categories` | Geopolitics / Economy / Tech & Policy / Market Signals / Weekly Digest |
+| `tags` | 이슈 키워드 |
+| `narrative_chain` | 연속 이슈 체인 (tags_history 기반) |
+| `sovereign_actor` | 핵심 행위자 |
