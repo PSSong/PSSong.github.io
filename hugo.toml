@@ -111,6 +111,24 @@ buildFuture = true
   url = "/archives/"
   weight = 91
 
+[[menu.main]]
+  identifier = "about"
+  name = "About"
+  url = "/about/"
+  weight = 95
+
+[[menu.main]]
+  identifier = "contact"
+  name = "Contact"
+  url = "/contact/"
+  weight = 96
+
+[[menu.main]]
+  identifier = "privacy-policy"
+  name = "Privacy Policy"
+  url = "/privacy-policy/"
+  weight = 97
+
 # 출력 포맷 (검색용 JSON 포함)
 [outputs]
   home = ["HTML", "RSS", "JSON"]
