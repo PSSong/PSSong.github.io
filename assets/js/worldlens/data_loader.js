@@ -1,9 +1,8 @@
 // 의존 모듈: 없음 (fetch API만 사용)
 // 피의존 모듈: main.js
-// 변경 시 영향: CONFIG.dataUrl → Phase 5에서 raw.githubusercontent.com URL로 교체 예정
 
 export const CONFIG = {
-  // TODO Phase 5: raw.githubusercontent.com/PSSong/pssong-blog/worldlens-data/data/positions.json
+  // positions.json은 GitHub Actions (worldlens-satellites.yml) 가 매 정시 main 브랜치에 커밋
   dataUrl:         '/worldlens/positions.json',
   portsUrl:        '/worldlens/ports.json',
   topoUrl:         'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json',

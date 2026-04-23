@@ -199,7 +199,6 @@
         <div class="wl-section">
           <span class="wl-label">Layers</span>
           <label class="wl-check"><input type="checkbox" id="wl-layer-aircraft"  checked> ✈</label>
-          <label class="wl-check"><input type="checkbox" id="wl-layer-vessel"    checked> ⛵</label>
           <label class="wl-check"><input type="checkbox" id="wl-layer-satellite" checked> 🛰</label>
           <label class="wl-check"><input type="checkbox" id="wl-layer-typhoon"   checked> 🌀</label>
           <label class="wl-check"><input type="checkbox" id="wl-layer-port"      checked> ⚓</label>
@@ -218,7 +217,6 @@
 
         <div class="wl-section wl-legend">
           <span class="wl-legend-item"><span class="wl-dot" style="background:#00DDFF"></span>Aircraft</span>
-          <span class="wl-legend-item"><span class="wl-dot" style="background:#FF8800"></span>Vessel</span>
           <span class="wl-legend-item"><span class="wl-dot" style="background:#FFDD00"></span>Satellite</span>
           <span class="wl-legend-item"><span class="wl-dot" style="background:#88BBFF"></span>Typhoon</span>
           <span class="wl-legend-item"><span class="wl-sqr" style="background:#CCCCCC"></span>Port</span>
@@ -258,7 +256,6 @@
     {{/* ── 하단 통계 ── */}}
     <div id="wl-stats">
       <span class="wl-stat">✈ <span id="wl-stat-aircraft">--</span></span>
-      <span class="wl-stat">⛵ <span id="wl-stat-vessels">--</span></span>
       <span class="wl-stat">🛰 <span id="wl-stat-satellites">--</span></span>
       <span class="wl-stat">🌀 <span id="wl-stat-typhoons">0</span></span>
       <span class="wl-stat wl-stat-time">Updated: <span id="wl-stat-time">--</span></span>
@@ -269,7 +266,7 @@
   </div>
 
   <div id="wl-disclaimer">
-    ⚠ Inactive military AIS/ADS-B not included · Based on public sources · Refreshed every 5 min
+    ⚠ Satellite positions via Celestrak TLE · Based on public sources · Refreshed every hour
   </div>
 
   {{/* ── CDN: D3 v7 + TopoJSON (Three.js 제거) ── */}}

@@ -47,7 +47,7 @@ async function init() {
 
   // ── 모바일 기본 레이어 OFF (항공·선박·위성) ────────────────────────────────────
   if (window.matchMedia('(max-width: 768px)').matches) {
-    ['aircraft', 'vessel', 'satellite'].forEach(k => {
+    ['aircraft', 'satellite'].forEach(k => {
       lm.setLayerVisible(k, false);
       const cb = document.getElementById(`wl-layer-${k}`);
       if (cb) cb.checked = false;
@@ -79,7 +79,7 @@ async function init() {
   });
 
   // ── 레이어 토글 체크박스 ──────────────────────────────────────────────────────
-  ['aircraft', 'vessel', 'satellite', 'typhoon', 'port'].forEach(layer => {
+  ['aircraft', 'satellite', 'typhoon', 'port'].forEach(layer => {
     const cb = document.getElementById(`wl-layer-${layer}`);
     if (cb) cb.addEventListener('change', () => lm.setLayerVisible(layer, cb.checked));
   });

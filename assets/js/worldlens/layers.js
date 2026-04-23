@@ -113,7 +113,6 @@ export class LayerManager {
 
   _rebuild() {
     this._renderLayer('aircraft',  this._data.aircraft,   'aircraft');
-    this._renderLayer('vessel',    this._data.vessels,    'vessel');
     this._renderLayer('satellite', this._data.satellites, 'satellite');
     this._renderPorts(this._data.ports);
     this._renderTyphoons(this._data.typhoons);
@@ -327,8 +326,7 @@ export class LayerManager {
     if (this._zoomLevel < 3) return;
 
     const types = [
-      { items: this._data.aircraft,   type: 'aircraft', nameKey: 'callsign' },
-      { items: this._data.vessels,    type: 'vessel',   nameKey: 'ship_name' },
+      { items: this._data.aircraft, type: 'aircraft', nameKey: 'callsign' },
     ];
     types.forEach(({ items, type, nameKey }) => {
       if (!this.layers[type]) return;
