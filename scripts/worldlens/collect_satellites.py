@@ -21,18 +21,19 @@ from sgp4.api import Satrec, jday
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = REPO_ROOT / "static" / "worldlens" / "positions.json"
 
-# Celestrak public TLE endpoints — no API key required.
+# Celestrak GP API — no API key required.
 # Keys are used only for log labels; order determines fetch priority.
+_GP = "https://celestrak.org/NORAD/elements/gp.php?GROUP={}&FORMAT=tle"
 TLE_SOURCES: dict[str, str] = {
-    "stations": "https://celestrak.org/pub/TLE/stations.txt",
-    "weather":  "https://celestrak.org/pub/TLE/weather.txt",
-    "gps-ops":  "https://celestrak.org/pub/TLE/gps-ops.txt",
-    "glonass":  "https://celestrak.org/pub/TLE/glonass-ops.txt",
-    "galileo":  "https://celestrak.org/pub/TLE/galileo.txt",
-    "beidou":   "https://celestrak.org/pub/TLE/beidou.txt",
-    "geo":      "https://celestrak.org/pub/TLE/geo.txt",
-    "science":  "https://celestrak.org/pub/TLE/science.txt",
-    "military": "https://celestrak.org/pub/TLE/military.txt",
+    "stations": _GP.format("stations"),
+    "weather":  _GP.format("weather"),
+    "gps-ops":  _GP.format("gps-ops"),
+    "glonass":  _GP.format("glonass-ops"),
+    "galileo":  _GP.format("galileo"),
+    "beidou":   _GP.format("beidou"),
+    "geo":      _GP.format("geo"),
+    "science":  _GP.format("science"),
+    "military": _GP.format("military"),
 }
 
 MAX_PER_CATEGORY = 60
