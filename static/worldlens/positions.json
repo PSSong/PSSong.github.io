@@ -1,1 +1,1 @@
-{"version":"1.0","generated_at":"2026-08-25T22:28:14.856123+00:00","elapsed_sec":270.59,"stats":{"aircraft":0,"vessels":0,"satellites":0,"typhoons":0,"ports":87},"aircraft":[],"vessels":[],"satellites":[],"typhoons":[],"ports":{"$ref":"/worldlens/static/ports.json"}}
+{"version":"1.0","generated_at":"2026-08-25T23:25:08.135618+00:00","elapsed_sec":271.31,"stats":{"aircraft":0,"vessels":0,"satellites":0,"typhoons":0,"ports":87},"aircraft":[],"vessels":[],"satellites":[],"typhoons":[],"ports":{"$ref":"/worldlens/static/ports.json"}}
