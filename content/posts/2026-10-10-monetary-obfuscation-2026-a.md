@@ -20,6 +20,3 @@ The issue of the Fed's independence and its potential connection to the BIS, an 
 This issue, which has persisted for 30 days, has shown a shift in direction from a neutral stance to a hawkish one. This shift may signal that the Fed is facing international financial pressures. In particular, the relationship with the BIS implies the possibility of external factors intervening in the Fed's policy-making process. As an international organization that promotes cooperation among central banks, discussions surrounding the Fed's independence become even more significant within the context of such international cooperation.
 
 These changes allow for the interpretation that high-interest rate policies are not merely considering domestic economic conditions but also reflecting international interests regarding global financial stability and dollar value. Consequently, high interest rates and a strong dollar can be interpreted as a complex strategy to respond to changes in the global economic environment while simultaneously attempting to curb domestic inflation. The fact that the Fed's policy decisions are closely linked not only to the domestic economy but also to international financial flows is making future economic outlooks even more difficult to predict.
-
----
-===ARTICLE_END
